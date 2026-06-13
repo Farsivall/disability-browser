@@ -116,7 +116,7 @@ def _render_model() -> ChatGoogleGenerativeAI:
     global _RENDER_MODEL
     if _RENDER_MODEL is None:
         _RENDER_MODEL = ChatGoogleGenerativeAI(
-            model=os.getenv("MODEL", "gemini-3.5-flash"),
+            model=os.getenv("MODEL", "gemini-2.5-flash"),
             google_api_key=os.getenv("GEMINI_API_KEY"),
             temperature=0,
         )
