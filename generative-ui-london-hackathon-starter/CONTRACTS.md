@@ -60,11 +60,24 @@ interface. Consumed by the content script, which re-fires the event on the
 
 ---
 
+> Roles Builder B's extractor actually emits: `heading`, `paragraph`, `link`,
+> `button`, `input` (incl. `inputType: select|textarea|checkbox|radio|…`),
+> `image`, `nav`, `form` (with `children[]`), and `list-item` (one per `<li>` —
+> there is no `list` container role). sourceRefs look like `pw-42`. This is
+> aligned with `extension/src/contracts.js` (the shared coordination point).
+
 ## The bridge — how `sourceRef` survives the round-trip
 
-The generated A2UI interactive components do **not** need a custom transport.
-They reuse the catalog's existing event channel. Every interactive component
-the agent emits carries:
+**Canonical (aligned with Builder B's `contracts.js`):** every interactive
+component the agent emits carries a **top-level `sourceRef` prop**
+(`SOURCE_REF_PROP = "sourceRef"`). The side panel reads that prop off the
+rendered component and builds a `ProxyMessage`; the proxy action is implied by
+the component type (BigButton → `click`, BigLink → `navigate`, BigInput →
+`input`, form → `submit`).
+
+**Stock-Button fallback (used until the accessible renderers ship):** a stock
+catalog `Button` has no `sourceRef` prop, only an `action`. There the agent
+puts the sourceRef inside the existing event channel instead:
 
 ```jsonc
 "action": {

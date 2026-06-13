@@ -7,13 +7,30 @@
  * Python file and CONTRACTS.md.
  */
 
-// ── Constants shared with the agent (mirror of contracts.py) ─────────────────
+// ── Constants shared across builders (mirror of contracts.py + B's contracts.js)
 
-/** The single A2UI event name every interactive generated component uses. */
-export const PROXY_EVENT_NAME = "proxy_event";
+/**
+ * CANONICAL sourceRef transport: the A2UI component prop name carrying the
+ * sourceRef through to the renderer. The agent forwards this on every
+ * interactive component; the side panel reads it to build the ProxyMessage.
+ */
+export const SOURCE_REF_PROP = "sourceRef";
+
+/** How extracted sourceRefs look (Builder B assigns "pw-<n>"). */
+export const REF_PREFIX = "pw-";
+
+/** The DOM attribute B stamps on the live element (B-internal; for reference). */
+export const DATA_ATTR = "data-pw-ref";
 
 /** The literal `type` field on a ProxyMessage. */
 export const PROXY_MESSAGE_TYPE = "PROXY_EVENT";
+
+/**
+ * FALLBACK transport only: when a stock catalog Button (no sourceRef prop)
+ * carries the sourceRef inside action.event.context, it uses this event name.
+ * The canonical path for accessible components is the top-level SOURCE_REF_PROP.
+ */
+export const PROXY_EVENT_NAME = "proxy_event";
 
 export type ProxyAction = "click" | "navigate" | "input" | "submit";
 

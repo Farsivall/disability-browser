@@ -35,6 +35,7 @@ _install_doc_inlining()
 
 from src.dynamic_agent import graph as dynamic_graph  # noqa: E402
 from src.fixed_agent import graph as fixed_graph  # noqa: E402
+from src.perceptual_agent import graph as perceptual_graph  # noqa: E402
 
 app = FastAPI(title="A2UI Demo Agents")
 
@@ -72,6 +73,19 @@ add_langgraph_fastapi_endpoint(
         config=_AGENT_CONFIG,
     ),
     path="/dynamic",
+)
+
+# Perceptual Web — accessibility regeneration agent (Builder A). Takes an
+# ExtractedPage + a user's free-text need and emits an accessible A2UI surface.
+add_langgraph_fastapi_endpoint(
+    app=app,
+    agent=LangGraphAGUIAgent(
+        name="perceptual_agent",
+        description="Accessibility regeneration of the live page into an A2UI surface.",
+        graph=perceptual_graph,
+        config=_AGENT_CONFIG,
+    ),
+    path="/perceptual",
 )
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -139,6 +153,7 @@ def root():
     agents = {
         "fixed_agent": "/fixed/",
         "dynamic_agent": "/dynamic/",
+        "perceptual_agent": "/perceptual/",
     }
     if _legal_registered:
         agents["legal_agent"] = "/legal/"

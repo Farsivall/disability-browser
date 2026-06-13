@@ -30,17 +30,35 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
-# ── Constants shared with the frontend (mirror in contracts.ts) ──────────────
+# ── Constants shared across builders ─────────────────────────────────────────
+# These mirror Builder B's extension/src/contracts.js (now merged to main).
+# Keep them identical to B's values.
 
-# The single A2UI event name every interactive generated component uses. The
-# side panel matches on this to know "this dispatch is a proxy action".
-PROXY_EVENT_NAME = "proxy_event"
+# CANONICAL sourceRef transport: the A2UI component prop name that carries the
+# sourceRef through to the renderer. Builder B's contract states the agent must
+# forward this prop on EVERY interactive component it emits; Builder C reads it
+# off the rendered component to build the ProxyMessage.
+SOURCE_REF_PROP = "sourceRef"
 
-# The literal `type` field on a ProxyMessage.
+# How extracted sourceRefs look (Builder B assigns "pw-<n>"). Opaque to us — we
+# only echo whatever B assigned — but documented here so tests use realistic ids.
+REF_PREFIX = "pw-"
+
+# The DOM attribute B stamps on the live element (B-internal; here for reference).
+DATA_ATTR = "data-pw-ref"
+
+# The literal `type` field on a ProxyMessage (B: PROXY_EVENT_TYPE).
 PROXY_MESSAGE_TYPE = "PROXY_EVENT"
 
-# Allowed proxy actions. Keep in sync with ProxyMessage.action below.
+# Allowed proxy actions. Keep in sync with ProxyMessage.action below + B's
+# PROXY_ACTIONS.
 ProxyAction = Literal["click", "navigate", "input", "submit"]
+
+# FALLBACK transport only: when emitting a STOCK catalog Button (which has no
+# sourceRef prop, only an `action`), the sourceRef rides inside
+# action.event.context under this event name. The canonical path for the
+# accessible components is the top-level SOURCE_REF_PROP above.
+PROXY_EVENT_NAME = "proxy_event"
 
 
 # ── CONTRACT 1 — ExtractedPage ───────────────────────────────────────────────
@@ -54,9 +72,11 @@ class ExtractedElement(TypedDict, total=False):
     `href`; an input has `inputType`/`options`; an image has `alt`).
     """
 
-    sourceRef: str          # STABLE unique id assigned at extraction time
-    role: str               # "heading"|"paragraph"|"link"|"button"|"input"|
-                            # "image"|"list"|"nav"|"form"|...
+    sourceRef: str          # STABLE unique id assigned at extraction time (pw-<n>)
+    role: str               # roles B actually emits: "heading"|"paragraph"|
+                            # "link"|"button"|"input"|"image"|"nav"|"form"|
+                            # "list-item" (one per <li>; there is no "list"
+                            # container role)
     level: int              # headings only (1-6)
     text: str               # visible text content
     href: str               # links only
