@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SidePanelProviders } from "./SidePanelProviders";
 import { SidePanelStatus } from "./SidePanelStatus";
 import { SidePanelSurface } from "./SidePanelSurface";
@@ -37,6 +37,28 @@ function SidePanelShellInner() {
   const { resetSession } = useRefinementSession();
   const { submitNeed } = useSubmitNeed();
   const [c6Running, setC6Running] = useState(false);
+
+  // DoD #7 — static inline confirmation when a proxied action fires on the real
+  // page. The extension host relays PROXY_ACK (from background.js) down into
+  // this panel via postMessage; surface it as a static status line (no popup,
+  // vestibular-safe).
+  useEffect(() => {
+    function onMessage(e: MessageEvent) {
+      const d = e.data;
+      if (!d || typeof d !== "object" || d.type !== "PROXY_ACK") return;
+      const action = typeof d.action === "string" ? d.action : "action";
+      if (d.status === "OK") {
+        statusBus.push(`✓ ${action} sent to the page`, "success");
+      } else {
+        statusBus.push(
+          `Couldn't ${action} on the page (${d.status || "error"})`,
+          "warn",
+        );
+      }
+    }
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
 
   const loadDemoSurface = useCallback(() => {
     resetSession();

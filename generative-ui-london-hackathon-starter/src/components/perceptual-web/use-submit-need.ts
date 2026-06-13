@@ -109,6 +109,9 @@ export function useSubmitNeed() {
           return;
         }
 
+        // DoD #4 — enrichment runs visibly (it auto-runs server-side when a
+        // Linkup key is set; never blocks — it's timeout-wrapped in the agent).
+        statusBus.push("Researching best practices…", "info");
         statusBus.push("Generating accessible layout…", "info");
         const opsBefore = surfaceOpCount();
 
