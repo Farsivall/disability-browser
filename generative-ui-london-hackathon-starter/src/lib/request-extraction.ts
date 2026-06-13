@@ -45,7 +45,7 @@ export async function requestExtractedPage(): Promise<ExtractedPage> {
         const timer = setTimeout(() => {
           cleanup();
           reject(new Error("extraction timeout"));
-        }, 4000);
+        }, 8000);
         const onMsg = (e: MessageEvent) => {
           const d = e.data;
           if (
