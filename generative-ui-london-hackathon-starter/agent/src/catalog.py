@@ -115,55 +115,48 @@ component must have `id: "root"`.
 # once Builder C confirms their renderers are live (see PERCEPTUAL_USE_A11Y in
 # perceptual_agent.py).
 #
-# Every INTERACTIVE accessible component carries a `sourceRef` (the bridge key
-# from the ExtractedPage) and an `action` whose event drives proxying:
-#   "action": { "event": { "name": "proxy_event",
-#                          "context": { "sourceRef": "el-42",
-#                                       "action": "click|navigate|input|submit",
-#                                       "value"?: "..." } } }
-# The side panel turns that context into a ProxyMessage (see CONTRACTS.md).
+# Builder C's accessible renderers (src/a2ui/catalog/{definitions.ts,
+# accessible-renderers.tsx}) read `sourceRef` as a PLAIN TOP-LEVEL PROP — there
+# is NO `action` object. The renderer infers the proxy action from the component
+# type (BigButton→click, BigLink→navigate, BigInput/BigSelect/BigToggle→input).
+# This prompt mirrors those Zod prop schemas EXACTLY — keep it in sync.
 ACCESSIBLE_COMPONENTS_PROMPT = """\
-## Perceptual Web accessibility components
+## Perceptual Web accessibility components (USE THESE for content + controls)
 
-Accessibility-engineered components. Prefer these over the generic catalog
-components when building an accessible surface. Visual scale, contrast, and
-focus styling come from the active theme mode — you do not set pixel sizes;
-you choose the right component and the directives + theme do the rest.
+Build the surface from these. Use ONLY the layout containers Stack / Row / Grid
+/ Section / Card / Divider from the catalog above for structure; for every
+heading, paragraph, control, link, image, and callout use the components below.
+Do NOT use the generic Heading / Text / Button / ChoiceChips for page content.
+
+You do NOT set sizes, contrast, or an `action` object — visual scale/contrast/
+focus come from the theme (applied automatically). Interactive components carry
+`sourceRef` as a TOP-LEVEL string prop; the renderer turns clicks into proxy
+events itself.
 
 ### Content
-- **AccessibleHeading** { text: string, level?: "1"|"2"|"3"|"4"|"5"|"6" }
-    Semantic heading, large and high-contrast capable.
-- **ReadableText** { text: string, size?: "md"|"lg"|"xl" }
-    Body text at >=18pt with 1.5 line-height and increased letter/word spacing.
+- **AccessibleHeading** { text, level?: "1".."6", sourceRef?, size?: default|large|xlarge }
+- **ReadableText** { text, sourceRef?, font?: default|readable, size?: default|large }
 
-### Interactive (each carries sourceRef + a proxy_event action)
-- **BigButton** { label: string, sourceRef: string, variant?: primary|secondary,
-    action: { event: { name:"proxy_event", context:{sourceRef, action:"click"} } } }
-    >=44x44px target, ample padding, thick high-contrast focus outline.
-- **BigLink** { label: string, href?: string, sourceRef: string,
-    action: { event: { name:"proxy_event", context:{sourceRef, action:"navigate"} } } }
-    Link sized as a big target; navigates via the proxy.
-- **BigInput** { label: string, sourceRef: string, inputType?: string,
-    placeholder?: string,
-    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
-    Large hit area; label always visible ABOVE the field.
-- **BigSelect** { label: string, sourceRef: string, options: [{label,value}],
-    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
-    Large select; label always visible above.
-- **BigToggle** { label: string, sourceRef: string, checked?: bool,
-    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
-    Large checkbox/switch with generous tap area.
+### Interactive (sourceRef is REQUIRED and must equal the source element's sourceRef)
+- **BigButton** { label, sourceRef, variant?: primary|secondary }   ← maps a `button`
+- **BigLink** { label, sourceRef, href? }                            ← maps a `link`
+- **BigInput** { label, sourceRef, inputType?: text|email|tel|textarea|number, placeholder?, value? }  ← maps a text-like `input`
+- **BigSelect** { label, sourceRef, options: [{label,value}], value? }  ← maps a select `input`
+- **BigToggle** { label, sourceRef, inputType?: checkbox|radio, checked?, name?, value? }  ← maps a checkbox/radio `input`
 
 ### Structure
 - **FlatNav** { items: [{label, sourceRef, href?}] }
-    A flattened list/grid of big nav buttons from a nested/hover menu. Each item
-    proxies a navigate action on click.
-- **StaticImageGrid** { images: [{alt, sourceRef?}] }
-    Unpacks a carousel into a static, non-animated grid (vestibular-safe).
-- **PaginatedList** { items: [id], pageSize?: number }
-    Chunks long content with big Next/Previous buttons instead of infinite
-    scroll.
+    Flatten a nested/hover `nav` into a grid of big nav items. Each item REQUIRES sourceRef.
+- **StaticImageGrid** { images: [{alt, label?, sourceRef?}], columns?: 1-6 }
+    Unpack carousels/image rows into a static grid (vestibular-safe).
+- **PaginatedList** { children: [ids], pageSize?: 1-20 }
+    Chunk long content with big Previous/Next buttons instead of infinite scroll.
+- **AccessibleCallout** { body, title?, tone?: info|positive|warning|neutral|uncertain, sourceRef? }
+    Static inline callout for confirmations or an "uncertain element" flag (tone="uncertain"). No popups.
 
-Reuse **Callout** (from the main catalog) for inline static confirmations and
-for "uncertain element — open original" flags (no popups, vestibular-safe).
+### Mapping rule
+Walk the ExtractedPage; map each element by its `role` to the component above,
+copying its `sourceRef` verbatim. Drop elements the directives say to remove
+(ads, popups, duplicate CTAs, sidebars). The theme is set for you — do not add
+theme props to components.
 """

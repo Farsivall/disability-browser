@@ -90,10 +90,27 @@ def render_node(cid, by_id, seen=None):
         return f'<div class="eyebrow">{_text_of(node.get("text"))}</div>'
     if comp == "Badge":
         return f'<span class="badge">{_text_of(node.get("label"))}</span>'
-    if comp == "Callout":
+    if comp in ("Callout", "AccessibleCallout"):
         t = _text_of(node.get("title"))
         b = _text_of(node.get("body"))
         return f'<div class="callout"><b>{t}</b><div>{b}</div></div>'
+    if comp == "FlatNav":
+        items = node.get("items", []) or []
+        btns = "".join(
+            f'<button class="btn" data-ref="{html.escape(str(i.get("sourceRef","")))}">'
+            f'{_text_of(i.get("label"))}<span class="ref">{html.escape(str(i.get("sourceRef","")))}</span></button>'
+            for i in items if isinstance(i, dict)
+        )
+        return f'<nav class="row">{btns}</nav>'
+    if comp == "StaticImageGrid":
+        imgs = node.get("images", []) or []
+        cells = "".join(
+            f'<div class="imgcell">🖼 {_text_of(i.get("alt"))}</div>'
+            for i in imgs if isinstance(i, dict)
+        )
+        return f'<div class="grid">{cells}</div>'
+    if comp == "PaginatedList":
+        return f'<div class="stack">{render_kids()}</div>'
     if comp == "BulletList":
         items = node.get("items", [])
         lis = "".join(f"<li>{_text_of(i)}</li>" for i in items if not isinstance(i, dict))

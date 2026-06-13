@@ -48,16 +48,16 @@ from src.need_profiles import (
     directives_for,
     mapper_profile_menu,
     normalize_ids,
+    theme_for,
 )
 
 SURFACE = "perceptual-surface"
 
-# When set, the generator emits Builder C's accessibility components (BigButton,
-# BigInput, …) which carry a top-level `sourceRef` prop. Default OFF until those
-# renderers ship — until then we emit the STOCK catalog components (which render
-# today and pass the template validator), carrying sourceRef via the event
-# channel. Flip to "1" once Builder C confirms the accessible renderers exist.
-PERCEPTUAL_USE_A11Y = os.getenv("PERCEPTUAL_USE_A11Y") == "1"
+# When on, the generator emits Builder C's accessibility components (BigButton,
+# BigInput, …) which carry a top-level `sourceRef` prop. Builder C's renderers
+# have shipped, so this is DEFAULT ON. Set PERCEPTUAL_USE_A11Y=0 to fall back to
+# the stock catalog (sourceRef via the event channel) for debugging.
+PERCEPTUAL_USE_A11Y = os.getenv("PERCEPTUAL_USE_A11Y", "1") != "0"
 
 # Bound the page payload so a bloated real page can't blow the token budget /
 # latency. Builder B already caps extraction (~300 elements), this is a backstop.
@@ -401,6 +401,16 @@ def generate_surface(
         print(f"[perceptual] failed to parse data_json: {exc}")
         data = {}
 
+    # Set the perceptual theme deterministically from the selected profiles
+    # (mirrors Builder C's PROFILE_THEME_PRESETS). The side panel's
+    # PerceptualSurface reads it at "/perceptualTheme" and applies the CSS
+    # (contrast / text-scale / spacing / reduced-motion / …). Not LLM-decided.
+    theme = theme_for(selection.get("profiles", []))
+    if theme and not isinstance(data, dict):
+        data = {}
+    if theme:
+        data["perceptualTheme"] = theme
+
     ops = [
         a2ui.create_surface(surface_id, catalog_id=catalog_id),
         a2ui.update_components(surface_id, components),
@@ -462,6 +472,19 @@ def _extract_page_from_messages(messages: list) -> dict | None:
     return None
 
 
+def _forwarded_payload(state: dict) -> dict | None:
+    """Defensive backup: if a `perceptualWeb` payload was forwarded and happens
+    to land in state (camelCase is snake_cased to `perceptual_web` by
+    ag_ui_langgraph; only present if a custom state schema captures it), return
+    it. The canonical path is the CopilotKit context channel; this never hurts.
+    """
+    for key in ("perceptual_web", "perceptualWeb"):
+        payload = state.get(key)
+        if isinstance(payload, dict):
+            return payload
+    return None
+
+
 def _latest_user_text(messages: list) -> str:
     """The most recent human message's text (the user's need on this turn)."""
     for msg in reversed(messages):
@@ -488,13 +511,26 @@ def generate_interface(runtime: ToolRuntime[Any]) -> str:
     messages = state.get("messages", [])
     need_text = _latest_user_text(messages)
 
+    # Primary: the CopilotKit context channel (useCopilotReadable). Backups:
+    # a forwarded perceptualWeb payload, then an inline JSON in a message.
     context_entries = state.get("copilotkit", {}).get("context", [])
     page = extract_page_from_context(context_entries)
+
+    forwarded = _forwarded_payload(state)
+    if forwarded:
+        if page is None and _looks_like_page(forwarded.get("extractedPage")):
+            page = forwarded["extractedPage"]
+        # Prefer an explicit forwarded need if the message text was empty.
+        if not need_text:
+            need_text = (
+                forwarded.get("latestNeed") or forwarded.get("need") or ""
+            ).strip()
+
     if page is None:
         page = _extract_page_from_messages(messages)
     if page is None:
         return json.dumps(
-            {"error": "no ExtractedPage found in context or messages"}
+            {"error": "no ExtractedPage found in context, forwarded props, or messages"}
         )
 
     emit_status("Understanding your needs…")

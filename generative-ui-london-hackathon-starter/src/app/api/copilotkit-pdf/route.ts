@@ -8,9 +8,12 @@ const FIXED_AGENT_URL =
   process.env.FIXED_AGENT_URL ?? "http://localhost:8123/fixed";
 const DYNAMIC_AGENT_URL =
   process.env.DYNAMIC_AGENT_URL ?? "http://localhost:8123/dynamic";
+const PERCEPTUAL_AGENT_URL =
+  process.env.PERCEPTUAL_AGENT_URL ?? "http://localhost:8123/perceptual";
 
 const fixedAgent = new HttpAgent({ url: FIXED_AGENT_URL });
 const dynamicAgent = new HttpAgent({ url: DYNAMIC_AGENT_URL });
+const perceptualAgent = new HttpAgent({ url: PERCEPTUAL_AGENT_URL });
 
 const runtime = new CopilotRuntime({
   agents: {
@@ -20,8 +23,8 @@ const runtime = new CopilotRuntime({
     default: fixedAgent,
     fixed_agent: fixedAgent,
     dynamic_agent: dynamicAgent,
-    // Perceptual Web side panel — alias until Builder A ships /perceptual endpoint
-    perceptual_agent: dynamicAgent,
+    // Perceptual Web side panel — the real Builder A agent at :8123/perceptual.
+    perceptual_agent: perceptualAgent,
   },
   // The A2UI middleware intercepts tool results that contain a2ui_operations
   // and turns them into rendered surfaces. We deliberately set

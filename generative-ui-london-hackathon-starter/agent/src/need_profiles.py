@@ -149,6 +149,47 @@ CAUTION = (
 )
 
 
+# Theme presets per profile — EXACT mirror of PROFILE_THEME_PRESETS in
+# src/a2ui/perceptual-theme.ts. The agent writes the merged result to the A2UI
+# data model at "/perceptualTheme"; Builder C's PerceptualSurface reads it and
+# applies the matching CSS (contrast/text-scale/spacing/motion/etc.). Keeping
+# this server-side makes the visual transform deterministic, not LLM-dependent.
+THEME_PRESETS: dict[str, dict] = {
+    VISUAL: {
+        "contrast": "high",
+        "textScale": "large",
+        "focusStyle": "emphasized",
+        "hideDecorations": True,
+    },
+    COGNITIVE: {
+        "textScale": "large",
+        "spacing": "cognitive",
+        "readableFont": False,
+    },
+    MOTOR: {
+        "focusStyle": "emphasized",
+        "textScale": "default",
+    },
+    VESTIBULAR: {
+        "reduceMotion": True,
+    },
+    ESSENTIALIST: {
+        "contrast": "high",
+        "spacing": "cognitive",
+    },
+}
+
+
+def theme_for(ids: list[str]) -> dict:
+    """Merge the theme presets of the selected profiles into one PerceptualTheme
+    dict (later profiles override earlier on conflicts). Unknown ids are ignored.
+    """
+    merged: dict = {}
+    for pid in normalize_ids(ids):
+        merged.update(THEME_PRESETS.get(pid, {}))
+    return merged
+
+
 def get_profile(profile_id: str) -> Profile | None:
     """Look up a profile by id (case-insensitive)."""
     return PROFILES.get(profile_id.strip().upper())

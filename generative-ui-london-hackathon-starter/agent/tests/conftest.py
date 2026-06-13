@@ -24,6 +24,17 @@ INTERACTIVE_COMPONENTS = {
     "Button", "BigButton", "BigLink", "BigInput", "BigSelect", "BigToggle",
 }
 
+# Builder C's catalog (src/a2ui/catalog/definitions.ts) — what the a11y agent
+# may emit. Layout containers (reused from the base catalog) + the accessible
+# components. Interactive accessible components carry a TOP-LEVEL sourceRef.
+LAYOUT_COMPONENTS = {"Stack", "Row", "Grid", "Section", "Card", "Divider"}
+ACCESSIBLE_INTERACTIVE = {"BigButton", "BigLink", "BigInput", "BigSelect", "BigToggle"}
+ACCESSIBLE_CONTENT = {
+    "AccessibleHeading", "ReadableText", "AccessibleCallout",
+    "FlatNav", "StaticImageGrid", "PaginatedList",
+}
+ALLOWED_A11Y_COMPONENTS = LAYOUT_COMPONENTS | ACCESSIBLE_INTERACTIVE | ACCESSIBLE_CONTENT
+
 
 # ── helpers (imported by test modules via `from conftest import ...`) ──────────
 

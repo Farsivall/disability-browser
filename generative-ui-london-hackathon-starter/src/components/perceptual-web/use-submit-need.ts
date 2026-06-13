@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import { useAgent } from "@copilotkit/react-core/v2";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAgent, useAgentContext } from "@copilotkit/react-core/v2";
 import { statusBus } from "@/a2ui/status-bus";
 import { requestExtractedPage } from "@/lib/request-extraction";
+import type { ExtractedPage } from "@/lib/contracts";
 import { PERCEPTUAL_AGENT_CHANNEL } from "@/lib/proxy-transport";
 import { surfaceBus } from "@/a2ui/surface-bus";
 import { buildDemoSurfaceForProfiles } from "@/components/perceptual-web/demo-surface";
@@ -41,6 +42,28 @@ export function useSubmitNeed() {
   const { patchTheme } = usePerceptualTheme();
   const submittingRef = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Make the live page reach the Python agent via the CopilotKit *context*
+  // channel (the only path that lands in state["copilotkit"]["context"], which
+  // the /perceptual agent reads). forwardedProps are dropped by LangGraph, so
+  // this readable — not forwardedProps — is what actually delivers the page.
+  // Fetched on mount (web-app: mock; extension: live bridge) so it's present
+  // before the user submits (no readable/runAgent race).
+  const [pageForContext, setPageForContext] = useState<ExtractedPage | null>(null);
+  useEffect(() => {
+    let live = true;
+    requestExtractedPage()
+      .then((p) => { if (live) setPageForContext(p); })
+      .catch(() => {});
+    return () => { live = false; };
+  }, []);
+  useAgentContext({
+    description:
+      "The current web page's extracted semantic structure (ExtractedPage). " +
+      "Rebuild THIS page. Every interactive element has a sourceRef that MUST be " +
+      "preserved on the component you generate so click-proxying works.",
+    value: pageForContext ?? "Page not extracted yet.",
+  });
 
   const submitNeed = useCallback(
     async (need: string, options?: SubmitNeedOptions) => {
