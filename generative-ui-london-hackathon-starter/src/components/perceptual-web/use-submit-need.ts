@@ -11,7 +11,11 @@ import { buildDemoSurfaceForProfiles } from "@/components/perceptual-web/demo-su
 import { useRefinementSession } from "@/a2ui/refinement-session";
 import { usePerceptualTheme } from "@/a2ui/use-perceptual-theme";
 
-const AGENT_SURFACE_TIMEOUT_MS = 8_000;
+// Upper bound only — exists solely to detect a genuinely hung/offline agent and
+// fall back gracefully, NOT to cap normal generation. Real generation
+// (map_need + Linkup enrichment + the generation LLM call on a large page) must
+// always win, so keep this generous.
+const AGENT_SURFACE_TIMEOUT_MS = 90_000;
 
 export type SubmitNeedOptions = {
   /** Skip agent and always apply offline demo layouts (TEST C6) */
