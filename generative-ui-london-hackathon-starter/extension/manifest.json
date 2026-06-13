@@ -24,6 +24,10 @@
     "default_path": "side-panel/host.html"
   },
 
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src http://localhost:3000 http://127.0.0.1:3000;"
+  },
+
   "action": {
     "default_title": "Open Perceptual Web"
   }
