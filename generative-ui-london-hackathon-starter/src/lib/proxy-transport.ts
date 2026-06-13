@@ -22,5 +22,16 @@ export function sendProxyMessage(message: ProxyMessage): void {
     return;
   }
 
+  // Extension mode: running inside the host iframe — relay the ProxyMessage up
+  // to the host, which forwards it to background.js over the "side-panel" Port.
+  try {
+    if (typeof window !== "undefined" && window.parent !== window) {
+      window.parent.postMessage(message, "*");
+      return;
+    }
+  } catch {
+    /* fall through to console */
+  }
+
   console.log("[PerceptualWeb] ProxyMessage", message);
 }

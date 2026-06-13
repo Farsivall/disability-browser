@@ -34,7 +34,55 @@ export async function requestExtractedPage(): Promise<ExtractedPage> {
     }
   }
 
+  // Extension mode: this panel runs inside the extension host's iframe (no
+  // chrome.* here). Ask the host (which holds the background Port) to extract
+  // and await the EXTRACTED_PAGE it relays back. Falls back to the mock on
+  // timeout, so web-app mode (not in an iframe) is unaffected.
+  if (inIframe()) {
+    try {
+      statusBus.push("Extracting page from tab…", "info");
+      return await new Promise<ExtractedPage>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error("extraction timeout"));
+        }, 4000);
+        const onMsg = (e: MessageEvent) => {
+          const d = e.data;
+          if (
+            d &&
+            typeof d === "object" &&
+            d.type === "EXTRACTED_PAGE" &&
+            d.data &&
+            typeof d.data === "object" &&
+            "elements" in d.data
+          ) {
+            cleanup();
+            resolve(d.data as ExtractedPage);
+          }
+        };
+        const cleanup = () => {
+          clearTimeout(timer);
+          window.removeEventListener("message", onMsg);
+        };
+        window.addEventListener("message", onMsg);
+        window.parent.postMessage({ type: EXTRACTION_REQUEST }, "*");
+      });
+    } catch (err) {
+      console.warn("[PerceptualWeb] iframe extraction failed", err);
+      statusBus.push("Extraction failed — using dev mock page", "warn");
+    }
+  }
+
   return mockShopClutterPage();
+}
+
+/** True when running inside an iframe (the extension host wraps C's panel). */
+function inIframe(): boolean {
+  try {
+    return typeof window !== "undefined" && window.parent !== window;
+  } catch {
+    return true;
+  }
 }
 
 /** Minimal ExtractedPage for dev without extension */

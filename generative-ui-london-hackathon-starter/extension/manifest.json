@@ -21,7 +21,7 @@
   },
 
   "side_panel": {
-    "default_path": "side-panel/dist/index.html"
+    "default_path": "side-panel/host.html"
   },
 
   "action": {
