@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Perceptual Web",
+  "description": "Accessibility agent: regenerates pages tailored to how each user struggles.",
+  "version": "0.1.0",
+
+  "permissions": [
+    "sidePanel",
+    "scripting",
+    "activeTab",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "side_panel": {
+    "default_path": "side-panel/dist/index.html"
+  },
+
+  "action": {
+    "default_title": "Open Perceptual Web"
+  }
+}
