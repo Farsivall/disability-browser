@@ -54,6 +54,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.memory import MemorySaver
 
 from src.catalog import CATALOG_ID, CATALOG_PROMPT
+from src.linkup_tools import web_search
 from src.pdf_tools import query_pdf
 
 
@@ -151,11 +152,11 @@ class _LazyRenderModel:
 def generate_a2ui(runtime: ToolRuntime[Any]) -> str:
     """Render the answer to the user's question as an A2UI surface.
 
-    Call this AFTER `query_pdf`. It reads the conversation (including the
-    query_pdf result) and the available A2UI catalog from context, then
-    designs the surface and returns the operations for the client to
-    render. You do NOT pass any arguments. It picks up everything from
-    state.
+    Call this LAST, after any `query_pdf` and/or `web_search` calls. It reads
+    the conversation (including those tool results) and the available A2UI
+    catalog from context, then designs the surface and returns the operations
+    for the client to render. You do NOT pass any arguments. It picks up
+    everything from state.
     """
     messages = runtime.state["messages"][:-1]
     context_entries = runtime.state.get("copilotkit", {}).get("context", [])
@@ -258,27 +259,43 @@ attaches a different PDF.
 Only if NO message in the history has ever contained a
 `[Document: ...]` header should you ask the user to attach a PDF.
 
+## Tools available
+
+- `query_pdf(pdf_text, question)` — extract a structured answer FROM the PDF.
+- `web_search(query)` — search the LIVE web (Linkup) for facts the PDF does
+  NOT contain: current events, external definitions, statistics, prices,
+  anything beyond the document. Returns a sourced answer + citations.
+- `generate_a2ui()` — render the answer as an A2UI surface. ALWAYS the last
+  call of the turn.
+
 ## How a turn MUST go (do not deviate)
 
-1. If NO message in the conversation history has a `[Document: ...]`
-   header, reply with a single sentence: "Attach a PDF and I'll render
-   the answer." STOP. Do not call any tool.
-2. Otherwise (a PDF is available from this turn or a previous one):
-   a. ONE call to `query_pdf(pdf_text=<the document text from the most
-      recent [Document: ...] message>, question=<the user's question on
-      THIS turn>)`. The tool returns JSON with shape_hint, title,
-      summary, data. Read it silently. DO NOT type the JSON anywhere.
-   b. ONE call to `generate_a2ui()`. No arguments.
-   c. STOP. Do not call any more tools. Do not write any chat content.
-      Your final assistant message MUST be an empty string. The rendered
-      surface IS the user-visible answer.
+1. Decide where the answer lives:
+   - If the question is about the uploaded document, use the PDF.
+   - If it needs live/external facts (or no PDF was ever attached), use
+     `web_search`.
+2. If NO PDF has ever been attached AND the question does not need the web,
+   reply with a single sentence: "Attach a PDF and I'll render the answer."
+   STOP. Do not call any tool.
+3. Otherwise gather the data with AT MOST ONE of these (you may use BOTH only
+   when the answer genuinely combines the document with live web facts):
+   a. `query_pdf(pdf_text=<the document text from the most recent
+      [Document: ...] message>, question=<the user's question on THIS turn>)`
+      — when the answer is in the PDF. Read its JSON silently.
+   b. `web_search(query=<a focused query>)` — when the answer needs live web
+      data. Read its JSON silently. Call it at most once.
+4. Then EXACTLY ONE call to `generate_a2ui()`. No arguments.
+5. STOP. Do not call any more tools. Do not write any chat content. Your
+   final assistant message MUST be an empty string. The rendered surface IS
+   the user-visible answer.
 
 ## Absolute hard rules. Breaking ANY of these causes a crash.
 
 - After `generate_a2ui` returns, you are DONE for this turn. Do not call
-  `query_pdf` again. Do not call `generate_a2ui` again. Do not write
+  `query_pdf`, `web_search`, or `generate_a2ui` again. Do not write
   anything except an empty string.
-- NEVER include the query_pdf JSON in your reply.
+- Call `web_search` AT MOST ONCE per turn, and only BEFORE `generate_a2ui`.
+- NEVER include the query_pdf or web_search JSON in your reply.
 - NEVER include any tool's return value in your reply.
 - NEVER quote the PDF text, summarize the document, or echo any part of
   `pdf_text` back into the chat.
@@ -313,7 +330,9 @@ above. Skip charts unless the user explicitly asked for data viz.
 
 ## Restating the loop guard
 
-- Max two tool calls per turn. query_pdf (once) + generate_a2ui (once).
+- Max three tool calls per turn: at most one data call each of `query_pdf`
+  and `web_search`, then `generate_a2ui` (once). Most turns use just one
+  data call + generate_a2ui.
 - After generate_a2ui returns, STOP IMMEDIATELY.
 - Never describe the surface in prose. The surface IS the answer.
 
@@ -328,7 +347,7 @@ def build_dynamic_agent():
     # then). Online behavior is unchanged.
     return create_agent(
         model=_LazyRenderModel(),
-        tools=[query_pdf, generate_a2ui],
+        tools=[query_pdf, web_search, generate_a2ui],
         middleware=[CopilotKitMiddleware()],
         system_prompt=SYSTEM_PROMPT,
         checkpointer=MemorySaver(),
