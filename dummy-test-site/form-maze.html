@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormMaze — Universal Benefits Application Form 2024</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #888;
+      background: #f5f5f5;
+      padding: 12px;
+    }
+    h1 { font-size: 14px; color: #666; margin-bottom: 4px; }
+    .subtitle { font-size: 9px; color: #aaa; margin-bottom: 16px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      max-width: 900px;
+      background: #fff;
+      padding: 16px;
+      border: 1px solid #ddd;
+    }
+    .form-section { margin-bottom: 12px; }
+    .form-section.full-width { grid-column: 1 / -1; }
+    .form-section h2 {
+      font-size: 10px;
+      color: #777;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 9px;
+      color: #999;
+      margin-bottom: 2px;
+    }
+    label .required { color: #c00; font-size: 8px; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      font-size: 10px;
+      padding: 2px 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 6px;
+    }
+    input[type="checkbox"],
+    input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .checkbox-row, .radio-row {
+      font-size: 9px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .date-row {
+      display: flex;
+      gap: 4px;
+    }
+    .date-row select { flex: 1; }
+
+    .validation-error {
+      font-size: 8px;
+      color: #c00;
+      margin-top: -4px;
+      margin-bottom: 4px;
+      display: none;
+    }
+    .validation-error.visible { display: block; }
+
+    button[type="submit"] {
+      font-size: 9px;
+      padding: 4px 12px;
+      background: #ddd;
+      border: 1px solid #bbb;
+      cursor: pointer;
+      color: #666;
+    }
+
+    #form-success {
+      display: none;
+      margin-top: 12px;
+      padding: 8px;
+      background: #efe;
+      border: 1px solid #8c8;
+      color: #484;
+      font-size: 11px;
+      max-width: 900px;
+    }
+    #form-success.visible { display: block; }
+  </style>
+</head>
+<body>
+  <h1 id="form-title" data-pw-role="heading">Universal Benefits Application Form 2024</h1>
+  <p class="subtitle" id="form-subtitle" data-pw-role="paragraph">Reference: UBA-2024-REV-7. Please complete all sections marked with <span class="required">*</span></p>
+
+  <form id="benefits-form" class="form-grid" data-pw-role="form">
+    <div class="form-section">
+      <h2>Personal Details</h2>
+      <label for="first-name">First name <span class="required">*</span></label>
+      <input type="text" id="first-name" name="firstName" required data-pw-role="input" data-pw-input-type="text" />
+      <div class="validation-error" id="err-first-name">Required field</div>
+
+      <label for="last-name">Last name <span class="required">*</span></label>
+      <input type="text" id="last-name" name="lastName" required data-pw-role="input" data-pw-input-type="text" />
+    </div>
+
+    <div class="form-section">
+      <h2>Contact</h2>
+      <label for="email">Email <span class="required">*</span></label>
+      <input type="email" id="email" name="email" required data-pw-role="input" data-pw-input-type="email" />
+
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" name="phone" data-pw-role="input" data-pw-input-type="tel" />
+    </div>
+
+    <div class="form-section">
+      <h2>Date of Birth</h2>
+      <label>Date of birth <span class="required">*</span></label>
+      <div class="date-row">
+        <select id="dob-day" name="dobDay" data-pw-role="input" data-pw-input-type="select">
+          <option value="">Day</option>
+        </select>
+        <select id="dob-month" name="dobMonth" data-pw-role="input" data-pw-input-type="select">
+          <option value="">Month</option>
+          <option value="1">January</option><option value="2">February</option>
+          <option value="3">March</option><option value="4">April</option>
+          <option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option>
+          <option value="9">September</option><option value="10">October</option>
+          <option value="11">November</option><option value="12">December</option>
+        </select>
+        <select id="dob-year" name="dobYear" data-pw-role="input" data-pw-input-type="select">
+          <option value="">Year</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section full-width">
+      <h2>Benefit Type</h2>
+      <label for="benefit-type">Select benefit <span class="required">*</span></label>
+      <select id="benefit-type" name="benefitType" required data-pw-role="input" data-pw-input-type="select">
+        <option value="">— Select —</option>
+        <option value="housing">Housing Benefit</option>
+        <option value="council-tax">Council Tax Reduction</option>
+        <option value="disability">Disability Living Allowance</option>
+        <option value="pip">Personal Independence Payment</option>
+        <option value="universal-credit">Universal Credit</option>
+        <option value="jobseekers">Jobseeker's Allowance</option>
+        <option value="employment-support">Employment Support Allowance</option>
+        <option value="carers">Carer's Allowance</option>
+        <option value="child-benefit">Child Benefit</option>
+        <option value="working-tax">Working Tax Credit</option>
+        <option value="child-tax">Child Tax Credit</option>
+        <option value="pension-credit">Pension Credit</option>
+        <option value="attendance">Attendance Allowance</option>
+        <option value="winter-fuel">Winter Fuel Payment</option>
+        <option value="cold-weather">Cold Weather Payment</option>
+        <option value="warm-home">Warm Home Discount</option>
+        <option value="free-school">Free School Meals</option>
+        <option value="blue-badge">Blue Badge</option>
+        <option value="bus-pass">Bus Pass</option>
+        <option value="railcard">Disabled Persons Railcard</option>
+        <option value="tv-licence">TV Licence Concession</option>
+        <option value="prescription">Prescription Prepayment</option>
+        <option value="dental">Dental Treatment Help</option>
+        <option value="eye-test">Eye Test Voucher</option>
+        <option value="legal-aid">Legal Aid</option>
+        <option value="funeral">Funeral Payment</option>
+        <option value="maternity">Maternity Allowance</option>
+        <option value="paternity">Paternity Pay</option>
+        <option value="statutory-sick">Statutory Sick Pay</option>
+        <option value="bereavement">Bereavement Support</option>
+        <option value="other">Other (specify below)</option>
+      </select>
+    </div>
+
+    <div class="form-section">
+      <h2>Eligibility</h2>
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="chk-uk-resident" name="ukResident" data-pw-role="input" data-pw-input-type="checkbox" /> UK resident</label>
+      </div>
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="chk-no-savings" name="noSavings" data-pw-role="input" data-pw-input-type="checkbox" /> Savings under £16,000</label>
+      </div>
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="chk-employed" name="employed" data-pw-role="input" data-pw-input-type="checkbox" /> Currently employed</label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Household</h2>
+      <div class="radio-row">
+        <label><input type="radio" id="household-single" name="household" value="single" data-pw-role="input" data-pw-input-type="radio" /> Single</label>
+      </div>
+      <div class="radio-row">
+        <label><input type="radio" id="household-couple" name="household" value="couple" data-pw-role="input" data-pw-input-type="radio" /> Couple</label>
+      </div>
+      <div class="radio-row">
+        <label><input type="radio" id="household-family" name="household" value="family" data-pw-role="input" data-pw-input-type="radio" /> Family with children</label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Additional Info</h2>
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="3" data-pw-role="input" data-pw-input-type="text"></textarea>
+    </div>
+
+    <div class="form-section full-width">
+      <button type="submit" id="form-submit" data-pw-role="button">Submit Application</button>
+    </div>
+  </form>
+
+  <div id="form-success" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var daySelect = document.getElementById('dob-day');
+      var yearSelect = document.getElementById('dob-year');
+      for (var d = 1; d <= 31; d++) {
+        var opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        daySelect.appendChild(opt);
+      }
+      for (var y = 2024; y >= 1920; y--) {
+        var optY = document.createElement('option');
+        optY.value = y;
+        optY.textContent = y;
+        yearSelect.appendChild(optY);
+      }
+
+      document.getElementById('benefits-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var firstName = document.getElementById('first-name').value;
+        if (!firstName.trim()) {
+          document.getElementById('err-first-name').classList.add('visible');
+          return;
+        }
+        document.getElementById('err-first-name').classList.remove('visible');
+        var benefit = document.getElementById('benefit-type');
+        var success = document.getElementById('form-success');
+        success.textContent = '✓ Application submitted for ' + firstName + ' — Benefit: ' +
+          (benefit.options[benefit.selectedIndex].text || 'None selected');
+        success.classList.add('visible');
+      });
+    })();
+  </script>
+</body>
+</html>

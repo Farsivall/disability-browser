@@ -8,12 +8,16 @@ import {
   useA2UIActions,
 } from "@copilotkit/a2ui-renderer";
 import { catalog, CATALOG_ID } from "@/a2ui/catalog";
+import { ProxyProvider } from "@/a2ui/proxy-context";
+import { PerceptualSurface } from "@/a2ui/PerceptualSurface";
+import { PerceptualThemeProvider } from "@/a2ui/use-perceptual-theme";
+import { PerceptualThemeControls } from "@/a2ui/PerceptualThemeControls";
 
 /* Each example renders a complete tiny A2UI surface. The shape mirrors
  * how the agent emits surfaces over the wire so the showcase doubles as
  * a sanity check on the catalog. */
 type Example = {
-  group: "layout" | "content" | "data" | "interactive";
+  group: "layout" | "content" | "data" | "interactive" | "accessible";
   name: string;
   blurb: string;
   surface: {
@@ -566,6 +570,164 @@ const EXAMPLES: Example[] = [
       data: { regions: ["na", "emea"] },
     },
   },
+
+  {
+    group: "accessible",
+    name: "AccessibleHeading + ReadableText",
+    blurb: "Large semantic headings and readable body copy (>=18pt, 1.5 line-height).",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "Stack",
+          gap: "md",
+          children: ["h1", "p1"],
+        },
+        {
+          id: "h1",
+          component: "AccessibleHeading",
+          level: "1",
+          size: "xlarge",
+          text: "Product overview",
+          sourceRef: "el-title",
+        },
+        {
+          id: "p1",
+          component: "ReadableText",
+          text: "Wireless headphones with active noise cancellation. Price shown includes all discounts.",
+          sourceRef: "el-desc",
+        },
+      ],
+    },
+  },
+  {
+    group: "accessible",
+    name: "BigButton + BigLink",
+    blurb: ">=44px touch targets with sourceRef proxy on click/navigate.",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "Row",
+          gap: "sm",
+          children: ["btn", "link"],
+        },
+        {
+          id: "btn",
+          component: "BigButton",
+          label: "Add to Cart",
+          sourceRef: "btn-add-to-cart",
+          variant: "primary",
+        },
+        {
+          id: "link",
+          component: "BigLink",
+          label: "View details",
+          sourceRef: "nav-headphones",
+        },
+      ],
+    },
+  },
+  {
+    group: "accessible",
+    name: "BigInput + BigSelect",
+    blurb: "Large labeled form controls with visible labels above fields.",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "Stack",
+          gap: "md",
+          children: ["name", "size"],
+        },
+        {
+          id: "name",
+          component: "BigInput",
+          label: "Your name",
+          sourceRef: "comment-name",
+          placeholder: "Enter name",
+        },
+        {
+          id: "size",
+          component: "BigSelect",
+          label: "Size",
+          sourceRef: "size-l",
+          options: [
+            { label: "Small", value: "S" },
+            { label: "Medium", value: "M" },
+            { label: "Large", value: "L" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    group: "accessible",
+    name: "FlatNav",
+    blurb: "Flattened navigation grid — replaces nested hover menus for motor profile.",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "FlatNav",
+          items: [
+            { label: "Home", sourceRef: "nav-home" },
+            { label: "Shop", sourceRef: "nav-shop" },
+            { label: "Headphones", sourceRef: "nav-headphones" },
+            { label: "News", sourceRef: "nav-news" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    group: "accessible",
+    name: "StaticImageGrid",
+    blurb: "Static image grid — unpacks carousels with no animation.",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "StaticImageGrid",
+          columns: 3,
+          images: [
+            { alt: "Front view", label: "Front", sourceRef: "img-1" },
+            { alt: "Side view", label: "Side", sourceRef: "img-2" },
+            { alt: "In case", label: "Case", sourceRef: "img-3" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    group: "accessible",
+    name: "AccessibleCallout",
+    blurb: "Static inline confirmation or uncertain-element flag — no popups.",
+    surface: {
+      components: [
+        {
+          id: "root",
+          component: "Stack",
+          gap: "sm",
+          children: ["ok", "warn"],
+        },
+        {
+          id: "ok",
+          component: "AccessibleCallout",
+          tone: "positive",
+          title: "Added to cart",
+          body: "Size L, Colour black — Final: £149.99",
+        },
+        {
+          id: "warn",
+          component: "AccessibleCallout",
+          tone: "uncertain",
+          title: "Unknown control",
+          body: "This control could not be safely simplified — open the original page.",
+        },
+      ],
+    },
+  },
 ];
 
 const GROUPS: { key: Example["group"]; label: string }[] = [
@@ -573,6 +735,7 @@ const GROUPS: { key: Example["group"]; label: string }[] = [
   { key: "content", label: "Content" },
   { key: "data", label: "Data viz" },
   { key: "interactive", label: "Interactive" },
+  { key: "accessible", label: "Accessible" },
 ];
 
 export default function CatalogPage() {
@@ -580,6 +743,22 @@ export default function CatalogPage() {
   const items =
     filter === "all" ? EXAMPLES : EXAMPLES.filter((e) => e.group === filter);
 
+  return (
+    <PerceptualThemeProvider>
+      <CatalogPageInner filter={filter} setFilter={setFilter} items={items} />
+    </PerceptualThemeProvider>
+  );
+}
+
+function CatalogPageInner({
+  filter,
+  setFilter,
+  items,
+}: {
+  filter: Example["group"] | "all";
+  setFilter: (f: Example["group"] | "all") => void;
+  items: Example[];
+}) {
   return (
     <>
       <SiteNav active="catalog" />
@@ -600,6 +779,8 @@ export default function CatalogPage() {
       />
 
       <main className="flex-1 max-w-[1320px] mx-auto px-6 py-8 w-full">
+        <PerceptualThemeControls />
+
         <div className="flex items-center gap-2 mb-6">
           <FilterBtn
             label="All"
@@ -697,11 +878,13 @@ function SurfacePreview({
   surface: { components: unknown[]; data?: Record<string, unknown> };
 }) {
   return (
-    <div className="a2ui-surface rounded-[var(--radius)]">
+    <ProxyProvider>
       <A2UIProvider catalog={catalog}>
-        <PreviewInner surface={surface} />
+        <PerceptualSurface surfaceId="preview" className="rounded-[var(--radius)]">
+          <PreviewInner surface={surface} />
+        </PerceptualSurface>
       </A2UIProvider>
-    </div>
+    </ProxyProvider>
   );
 }
 

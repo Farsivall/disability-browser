@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopClutter — UltraMega Pro Wireless Noise-Cancelling Bluetooth Headphones 2024 Edition Premium</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      background: #fafafa;
+      line-height: 1.2;
+    }
+
+    /* Nested hover nav — exercises MOTOR (flatten) */
+    .top-nav {
+      background: linear-gradient(90deg, #333, #555);
+      padding: 4px 8px;
+      position: relative;
+      z-index: 100;
+    }
+    .top-nav > ul { list-style: none; display: flex; gap: 2px; }
+    .top-nav li { position: relative; }
+    .top-nav > ul > li > a {
+      display: block;
+      padding: 6px 10px;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 10px;
+    }
+    .top-nav li ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #444;
+      min-width: 120px;
+      list-style: none;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .top-nav li:hover > ul { display: block; }
+    .top-nav li ul li a {
+      display: block;
+      padding: 4px 8px;
+      color: #bbb;
+      text-decoration: none;
+      font-size: 9px;
+    }
+    .top-nav li ul li ul {
+      left: 100%;
+      top: 0;
+    }
+
+    .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+    .main { flex: 1; padding: 8px; }
+    .sidebar {
+      width: 220px;
+      padding: 8px;
+      background: #f0f0f0;
+      border-left: 1px solid #ddd;
+      font-size: 9px;
+      color: #999;
+    }
+    .sidebar h3 { font-size: 10px; color: #888; margin-bottom: 6px; }
+    .sidebar-ad {
+      background: #ffe0e0;
+      border: 1px dashed #faa;
+      padding: 20px 8px;
+      text-align: center;
+      margin: 8px 0;
+      animation: pulse-ad 2s infinite;
+    }
+    @keyframes pulse-ad {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Keyword-stuffed tiny title — VISUAL + COGNITIVE */
+    .product-title {
+      font-size: 9px;
+      font-weight: normal;
+      color: #bbb;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    /* Carousel — VESTIBULAR */
+    .carousel {
+      width: 280px;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #ddd;
+      margin-bottom: 8px;
+    }
+    .carousel-track {
+      display: flex;
+      width: 840px;
+      animation: carousel-scroll 6s infinite;
+    }
+    @keyframes carousel-scroll {
+      0%, 30% { transform: translateX(0); }
+      33%, 63% { transform: translateX(-280px); }
+      66%, 96% { transform: translateX(-560px); }
+      100% { transform: translateX(0); }
+    }
+    .carousel-slide {
+      width: 280px;
+      height: 200px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #666;
+    }
+    .carousel-slide:nth-child(1) { background: #e8e8e8; }
+    .carousel-slide:nth-child(2) { background: #ddd; }
+    .carousel-slide:nth-child(3) { background: #d0d0d0; }
+
+    /* Price chaos — ESSENTIALIST + COGNITIVE */
+    .price-block { margin: 8px 0; }
+    .price-original { text-decoration: line-through; color: #ccc; font-size: 10px; }
+    .price-deal { color: #999; font-size: 12px; font-weight: bold; }
+    .coupon-row { font-size: 9px; color: #bbb; margin-top: 4px; }
+    .coupon-row input { width: 10px; height: 10px; }
+
+    /* Tiny size boxes — MOTOR + VISUAL */
+    .size-row { display: flex; gap: 2px; margin: 8px 0; }
+    .size-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7px;
+      color: #aaa;
+      cursor: pointer;
+      background: #fff;
+    }
+    .size-box.selected { border-color: #666; background: #eee; }
+
+    /* Tiny colour dots — MOTOR + VISUAL */
+    .color-row { display: flex; gap: 3px; margin: 8px 0; }
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .color-dot.selected { border-color: #333; }
+    .color-dot[data-color="black"] { background: #111; }
+    .color-dot[data-color="white"] { background: #fff; border-color: #ccc; }
+    .color-dot[data-color="red"] { background: #c00; }
+    .color-dot[data-color="blue"] { background: #06c; }
+
+    /* Identical CTAs — ESSENTIALIST + MOTOR */
+    .cta-row { display: flex; gap: 4px; margin: 12px 0; flex-wrap: wrap; }
+    .cta-btn {
+      padding: 3px 8px;
+      font-size: 9px;
+      border: 1px solid #ccc;
+      background: linear-gradient(#f5f5f5, #e0e0e0);
+      color: #888;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+    .cta-btn:hover { background: linear-gradient(#e8e8e8, #d5d5d5); }
+
+    .body-text {
+      font-size: 10px;
+      color: #ccc;
+      line-height: 1.3;
+      margin: 8px 0;
+    }
+
+    /* Newsletter popup — COGNITIVE declutter target */
+    .newsletter-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 200px;
+      background: #fff;
+      border: 2px solid #f90;
+      padding: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      z-index: 1000;
+      animation: popup-bounce 3s infinite;
+    }
+    @keyframes popup-bounce {
+      0%, 90%, 100% { transform: translateY(0); }
+      95% { transform: translateY(-8px); }
+    }
+    .newsletter-popup h4 { font-size: 11px; color: #666; }
+    .newsletter-popup input { width: 100%; font-size: 9px; padding: 2px; margin: 4px 0; }
+    .newsletter-popup button { font-size: 9px; padding: 2px 6px; }
+
+    #cart-confirmation {
+      display: none;
+      margin-top: 8px;
+      padding: 6px;
+      background: #efe;
+      border: 1px solid #8c8;
+      color: #484;
+      font-size: 11px;
+    }
+    #cart-confirmation.visible { display: block; }
+
+    .related-item {
+      padding: 4px;
+      border-bottom: 1px solid #ddd;
+      font-size: 8px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" id="main-nav" data-pw-role="nav">
+    <ul>
+      <li>
+        <a href="index.html" id="nav-home">Home</a>
+      </li>
+      <li>
+        <a href="#" id="nav-shop">Shop</a>
+        <ul>
+          <li><a href="#" id="nav-electronics">Electronics</a>
+            <ul>
+              <li><a href="shop-clutter.html" id="nav-headphones">Headphones</a></li>
+              <li><a href="#" id="nav-speakers">Speakers</a></li>
+            </ul>
+          </li>
+          <li><a href="#" id="nav-clothing">Clothing</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="news-wall.html" id="nav-news">News</a>
+      </li>
+      <li>
+        <a href="#" id="nav-deals">Deals</a>
+        <ul>
+          <li><a href="#" id="nav-flash">Flash Sale</a></li>
+          <li><a href="#" id="nav-clearance">Clearance</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="layout">
+    <main class="main">
+      <h1 class="product-title" id="product-title" data-pw-role="heading">
+        UltraMega Pro Wireless Noise-Cancelling Bluetooth Headphones 2024 Edition Premium Studio Quality Over-Ear Headset with Mic
+      </h1>
+
+      <div class="carousel" id="product-carousel" data-pw-role="carousel">
+        <div class="carousel-track">
+          <div class="carousel-slide" data-pw-role="image" data-pw-alt="Headphones front view">Image 1: Front</div>
+          <div class="carousel-slide" data-pw-role="image" data-pw-alt="Headphones side view">Image 2: Side</div>
+          <div class="carousel-slide" data-pw-role="image" data-pw-alt="Headphones in case">Image 3: Case</div>
+        </div>
+      </div>
+
+      <div class="price-block" id="price-block">
+        <span class="price-original" id="price-original">£299.99</span>
+        <span class="price-deal" id="price-deal">£149.99</span>
+        <div class="coupon-row">
+          <label><input type="checkbox" id="coupon-checkbox" data-pw-role="input" data-pw-input-type="checkbox" /> Apply SAVE20 coupon (-£30)</label>
+        </div>
+        <div id="final-price" style="font-size:9px;color:#bbb;margin-top:2px;">Final: £149.99</div>
+      </div>
+
+      <p class="body-text" id="product-desc" data-pw-role="paragraph">
+        Experience unparalleled audio fidelity with our flagship wireless headphones featuring advanced active noise cancellation technology and premium drivers engineered for audiophile-grade sound reproduction across all frequency ranges.
+      </p>
+
+      <div id="size-selector" data-pw-role="form">
+        <span style="font-size:9px;color:#bbb;">Size:</span>
+        <div class="size-row">
+          <button type="button" class="size-box" id="size-s" data-pw-role="button" data-pw-value="S">S</button>
+          <button type="button" class="size-box" id="size-m" data-pw-role="button" data-pw-value="M">M</button>
+          <button type="button" class="size-box selected" id="size-l" data-pw-role="button" data-pw-value="L">L</button>
+          <button type="button" class="size-box" id="size-xl" data-pw-role="button" data-pw-value="XL">XL</button>
+        </div>
+      </div>
+
+      <div id="color-selector">
+        <span style="font-size:9px;color:#bbb;">Colour:</span>
+        <div class="color-row">
+          <button type="button" class="color-dot selected" id="color-black" data-color="black" data-pw-role="button" aria-label="Black"></button>
+          <button type="button" class="color-dot" id="color-white" data-color="white" data-pw-role="button" aria-label="White"></button>
+          <button type="button" class="color-dot" id="color-red" data-color="red" data-pw-role="button" aria-label="Red"></button>
+          <button type="button" class="color-dot" id="color-blue" data-color="blue" data-pw-role="button" aria-label="Blue"></button>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button type="button" class="cta-btn" id="btn-add-to-cart" data-pw-role="button">Add to Cart</button>
+        <button type="button" class="cta-btn" id="btn-buy-now" data-pw-role="button">Buy Now</button>
+        <button type="button" class="cta-btn" id="btn-save" data-pw-role="button">Save</button>
+        <button type="button" class="cta-btn" id="btn-compare" data-pw-role="button">Compare</button>
+      </div>
+
+      <div id="cart-confirmation" role="status" aria-live="polite"></div>
+    </main>
+
+    <aside class="sidebar" id="sidebar" data-pw-role="nav">
+      <h3>Customers also bought</h3>
+      <div class="related-item" data-pw-role="link">Cheap Earbuds £9.99</div>
+      <div class="related-item" data-pw-role="link">USB Cable £2.99</div>
+      <div class="sidebar-ad" data-pw-role="paragraph">🔥 SPONSORED: Win a free TV! Click here!!!</div>
+      <h3>Trending now</h3>
+      <div class="related-item">Item A — 12 views</div>
+      <div class="related-item">Item B — 8 views</div>
+      <div class="sidebar-ad" data-pw-role="paragraph">📢 AD: Subscribe to our newsletter for 0% off nothing!</div>
+    </aside>
+  </div>
+
+  <div class="newsletter-popup" id="newsletter-popup" data-pw-role="form">
+    <h4>🎉 GET 10% OFF!!!</h4>
+    <input type="email" id="newsletter-email" placeholder="email" data-pw-role="input" data-pw-input-type="email" />
+    <button type="button" id="newsletter-close" data-pw-role="button">No thanks</button>
+  </div>
+
+  <script>
+    (function () {
+      var coupon = document.getElementById('coupon-checkbox');
+      var finalPrice = document.getElementById('final-price');
+      var basePrice = 149.99;
+
+      function updatePrice() {
+        var price = coupon.checked ? basePrice - 30 : basePrice;
+        finalPrice.textContent = 'Final: £' + price.toFixed(2);
+      }
+      coupon.addEventListener('change', updatePrice);
+
+      document.querySelectorAll('.size-box').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.size-box').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+        });
+      });
+
+      document.querySelectorAll('.color-dot').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.color-dot').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+        });
+      });
+
+      document.getElementById('btn-add-to-cart').addEventListener('click', function () {
+        var size = document.querySelector('.size-box.selected');
+        var color = document.querySelector('.color-dot.selected');
+        var conf = document.getElementById('cart-confirmation');
+        conf.textContent = '✓ Added to cart: Size ' + (size ? size.dataset.pwValue : '?') +
+          ', Colour ' + (color ? color.dataset.color : '?') +
+          ' — ' + finalPrice.textContent;
+        conf.classList.add('visible');
+      });
+
+      document.getElementById('newsletter-close').addEventListener('click', function () {
+        document.getElementById('newsletter-popup').style.display = 'none';
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewsWall — Breaking: Everything You Need to Know About Everything Happening Right Now</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      font-size: 11px;
+      color: #aaa;
+      background: #fff;
+    }
+
+    /* Sticky nav + cookie banner — COGNITIVE */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: #222;
+      padding: 4px 12px;
+      z-index: 200;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .sticky-nav a {
+      color: #888;
+      text-decoration: none;
+      font-size: 9px;
+      padding: 2px 6px;
+    }
+    .sticky-nav .logo { font-weight: bold; color: #666; font-size: 11px; }
+
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #333;
+      color: #999;
+      padding: 8px 12px;
+      font-size: 9px;
+      z-index: 300;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cookie-banner button {
+      font-size: 8px;
+      padding: 2px 8px;
+      background: #555;
+      color: #ccc;
+      border: none;
+      cursor: pointer;
+    }
+
+    .layout { display: flex; max-width: 1000px; margin: 0 auto; }
+    .article-col { flex: 1; padding: 12px 16px; max-width: 520px; }
+    .sidebar {
+      width: 240px;
+      padding: 12px;
+      background: #f8f8f8;
+      font-size: 9px;
+      color: #bbb;
+    }
+
+    h1.article-title {
+      font-size: 13px;
+      font-weight: normal;
+      color: #999;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .byline { font-size: 8px; color: #ccc; margin-bottom: 10px; }
+
+    /* Dense justified paragraphs — COGNITIVE + VISUAL */
+    .article-body p {
+      font-size: 10px;
+      color: #ccc;
+      line-height: 1.15;
+      text-align: justify;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    /* Inline ads — COGNITIVE declutter */
+    .inline-ad {
+      background: #fff3cd;
+      border: 1px dashed #ffc107;
+      padding: 16px 8px;
+      text-align: center;
+      font-size: 9px;
+      color: #856404;
+      margin: 8px 0;
+    }
+
+    /* Autoplay video — VESTIBULAR */
+    .video-embed {
+      width: 100%;
+      height: 120px;
+      background: #000;
+      margin: 10px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .video-embed::after {
+      content: '▶ AUTOPLAY VIDEO';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10px;
+      animation: video-flash 1.5s infinite;
+    }
+    @keyframes video-flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Floating social share — COGNITIVE */
+    .social-float {
+      position: fixed;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 50;
+    }
+    .social-float button {
+      width: 24px;
+      height: 24px;
+      font-size: 8px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .trending-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 8px;
+    }
+
+    /* Comment form — MOTOR */
+    .comment-form {
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+    .comment-form label { font-size: 9px; color: #bbb; display: block; margin-bottom: 2px; }
+    .comment-form textarea {
+      width: 100%;
+      height: 40px;
+      font-size: 9px;
+      padding: 2px;
+      border: 1px solid #ddd;
+      resize: none;
+    }
+    .comment-form input[type="text"] {
+      width: 100%;
+      font-size: 9px;
+      padding: 2px;
+      margin: 4px 0;
+      border: 1px solid #ddd;
+    }
+    .comment-form button[type="submit"] {
+      font-size: 8px;
+      padding: 2px 6px;
+      margin-top: 4px;
+      background: #eee;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      color: #999;
+    }
+
+    #comment-success {
+      display: none;
+      margin-top: 8px;
+      padding: 6px;
+      background: #efe;
+      border: 1px solid #8c8;
+      color: #484;
+      font-size: 10px;
+    }
+    #comment-success.visible { display: block; }
+  </style>
+</head>
+<body>
+  <nav class="sticky-nav" id="sticky-nav" data-pw-role="nav">
+    <span class="logo" id="site-logo">NewsWall</span>
+    <a href="index.html" id="nav-home">Home</a>
+    <a href="shop-clutter.html" id="nav-shop">Shop</a>
+    <a href="#" id="nav-politics">Politics</a>
+    <a href="#" id="nav-tech">Tech</a>
+    <a href="#" id="nav-sports">Sports</a>
+  </nav>
+
+  <div class="social-float" id="social-share" data-pw-role="nav">
+    <button type="button" id="share-fb" data-pw-role="button" title="Facebook">f</button>
+    <button type="button" id="share-tw" data-pw-role="button" title="Twitter">t</button>
+    <button type="button" id="share-li" data-pw-role="button" title="LinkedIn">in</button>
+  </div>
+
+  <div class="layout">
+    <article class="article-col" id="article">
+      <h1 class="article-title" id="article-title" data-pw-role="heading">
+        Breaking: Everything You Need to Know About Everything Happening Right Now in the World Today
+      </h1>
+      <p class="byline" id="article-byline" data-pw-role="paragraph">By Jane Reporter · 2 min ago · 847 comments</p>
+
+      <div class="article-body" id="article-body">
+        <p data-pw-role="paragraph">
+          In a development that analysts are calling unprecedented yet entirely predictable, sources close to the situation have confirmed that events continue to unfold in ways that experts had both anticipated and failed to foresee, creating a complex tapestry of causation and correlation that defies simple narrative construction while simultaneously demanding immediate public attention and sustained engagement from readers who may or may not possess the contextual framework necessary to fully appreciate the multifaceted implications of what transpired during the critical hours preceding the announcement that would ultimately reshape the discourse surrounding the issue at hand.
+        </p>
+
+        <div class="inline-ad" id="ad-1" data-pw-role="paragraph">📢 ADVERTISEMENT: Buy our product! Limited time offer! Click now!</div>
+
+        <p data-pw-role="paragraph">
+          The primary stakeholder, speaking on condition of anonymity because they were not authorized to speak publicly about matters they were explicitly authorized to discuss, emphasized that the organization's commitment to transparency remained unwavering despite recent revelations that some internal communications suggested a more nuanced approach might have been warranted given the evolving circumstances on the ground.
+        </p>
+
+        <div class="video-embed" id="autoplay-video" data-pw-role="image" data-pw-alt="Autoplay news video"></div>
+
+        <p data-pw-role="paragraph">
+          Market observers noted volatile trading patterns as investors parsed the implications of regulatory signals that appeared contradictory when viewed in isolation but formed a coherent pattern when contextualized within the broader macroeconomic environment characterized by persistent inflationary pressures and shifting monetary policy expectations across major central banking institutions.
+        </p>
+
+        <div class="inline-ad" id="ad-2" data-pw-role="paragraph">🎰 SPONSORED: Play now and win big! 18+ only. Terms apply.</div>
+
+        <p data-pw-role="paragraph">
+          Community leaders gathered at a hastily organized press conference to address concerns raised by residents who felt their voices had been insufficiently represented in deliberations that would ultimately determine the fate of a proposed infrastructure project promising both economic revitalization and environmental remediation in equal measure according to proponents and skeptics alike.
+        </p>
+
+        <p data-pw-role="paragraph">
+          As the story continues to develop, journalists remain stationed at key locations awaiting further statements from officials who have thus far declined to comment on speculation regarding potential policy shifts that could materialize in the coming weeks pending the outcome of ongoing negotiations between parties whose interests align on some dimensions while diverging sharply on others.
+        </p>
+      </div>
+
+      <form class="comment-form" id="comment-form" data-pw-role="form">
+        <label for="comment-name">Name</label>
+        <input type="text" id="comment-name" name="name" data-pw-role="input" data-pw-input-type="text" />
+
+        <label for="comment-body">Comment</label>
+        <textarea id="comment-body" name="comment" data-pw-role="input" data-pw-input-type="text"></textarea>
+
+        <button type="submit" id="comment-submit" data-pw-role="button">Post Comment</button>
+      </form>
+      <div id="comment-success" role="status" aria-live="polite"></div>
+    </article>
+
+    <aside class="sidebar" id="trending-sidebar" data-pw-role="nav">
+      <h3 style="font-size:10px;color:#999;margin-bottom:6px;">Trending</h3>
+      <div class="trending-item" data-pw-role="link">Story about cats goes viral</div>
+      <div class="trending-item" data-pw-role="link">Celebrity says something</div>
+      <div class="trending-item" data-pw-role="link">Weather: it might rain</div>
+      <div class="trending-item" data-pw-role="link">Stock market does thing</div>
+      <div class="inline-ad" style="margin-top:12px;" data-pw-role="paragraph">Subscribe for £0.99/month!!!</div>
+    </aside>
+  </div>
+
+  <div class="cookie-banner" id="cookie-banner" data-pw-role="form">
+    <span>We use 847 cookies to track everything you do.</span>
+    <button type="button" id="cookie-accept" data-pw-role="button">Accept All</button>
+  </div>
+
+  <script>
+    (function () {
+      document.getElementById('cookie-accept').addEventListener('click', function () {
+        document.getElementById('cookie-banner').style.display = 'none';
+      });
+
+      document.getElementById('comment-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name = document.getElementById('comment-name').value || 'Anonymous';
+        var body = document.getElementById('comment-body').value || '(empty)';
+        var success = document.getElementById('comment-success');
+        success.textContent = '✓ Comment posted by ' + name + ': "' + body.substring(0, 80) + '"';
+        success.classList.add('visible');
+        document.getElementById('comment-body').value = '';
+      });
+    })();
+  </script>
+</body>
+</html>

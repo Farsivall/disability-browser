@@ -20,6 +20,8 @@ const runtime = new CopilotRuntime({
     default: fixedAgent,
     fixed_agent: fixedAgent,
     dynamic_agent: dynamicAgent,
+    // Perceptual Web side panel — alias until Builder A ships /perceptual endpoint
+    perceptual_agent: dynamicAgent,
   },
   // The A2UI middleware intercepts tool results that contain a2ui_operations
   // and turns them into rendered surfaces. We deliberately set

@@ -20,6 +20,7 @@ import {
   YAxis,
 } from "recharts";
 import type { RendererProps } from "@copilotkit/a2ui-renderer";
+import { accessibleRenderers } from "./accessible-renderers";
 
 /* The runtime walks `{path}` bindings against the data model before
  * handing props to renderers, so every prop value below is post-resolution. */
@@ -1071,4 +1072,5 @@ export const renderers = {
   DataTable,
   Button,
   ChoiceChips,
+  ...accessibleRenderers,
 };

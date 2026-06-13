@@ -274,6 +274,140 @@ export const definitions = {
       multi: z.boolean().optional(),
     }),
   },
+
+  /* ── Perceptual Web accessible components (Builder C) ── */
+
+  AccessibleHeading: {
+    description:
+      "Semantic heading (h1-h6) sized for readability. Use for page and section titles when VISUAL or COGNITIVE profiles apply. Always preserve sourceRef from the extracted element.",
+    props: z.object({
+      text: stringOrPath,
+      level: z.enum(["1", "2", "3", "4", "5", "6"]).optional(),
+      sourceRef: z.string().optional(),
+      size: z.enum(["default", "large", "xlarge"]).optional(),
+    }),
+  },
+
+  ReadableText: {
+    description:
+      "Body text at >=18pt with generous line/word spacing. Use for paragraphs when COGNITIVE or VISUAL profiles apply. Set font='readable' only when user opts in.",
+    props: z.object({
+      text: stringOrPath,
+      sourceRef: z.string().optional(),
+      font: z.enum(["default", "readable"]).optional(),
+      size: z.enum(["default", "large"]).optional(),
+    }),
+  },
+
+  BigButton: {
+    description:
+      "Large touch target (>=44px) button for MOTOR profile. REQUIRED sourceRef matching ExtractedElement.sourceRef. Proxies click to live page.",
+    props: z.object({
+      label: stringOrPath,
+      sourceRef: z.string(),
+      variant: z.enum(["primary", "secondary"]).optional(),
+    }),
+  },
+
+  BigLink: {
+    description:
+      "Large touch target link for MOTOR profile. REQUIRED sourceRef. Proxies navigate to live page.",
+    props: z.object({
+      label: stringOrPath,
+      sourceRef: z.string(),
+      href: stringOrPath.optional(),
+    }),
+  },
+
+  BigInput: {
+    description:
+      "Large labeled text field or textarea. REQUIRED sourceRef. Label always visible above field. Proxies input changes.",
+    props: z.object({
+      label: stringOrPath,
+      sourceRef: z.string(),
+      inputType: z
+        .enum(["text", "email", "tel", "textarea", "number"])
+        .optional(),
+      placeholder: stringOrPath.optional(),
+      value: stringOrPath.optional(),
+    }),
+  },
+
+  BigSelect: {
+    description:
+      "Large labeled dropdown. REQUIRED sourceRef. Options as {label, value} pairs. Proxies input on change.",
+    props: z.object({
+      label: stringOrPath,
+      sourceRef: z.string(),
+      options: z.union([
+        z.array(z.object({ label: z.string(), value: z.string() })),
+        z.object({ path: z.string() }),
+      ]),
+      value: stringOrPath.optional(),
+    }),
+  },
+
+  BigToggle: {
+    description:
+      "Large checkbox or radio with visible label. REQUIRED sourceRef. Proxies input on change.",
+    props: z.object({
+      label: stringOrPath,
+      sourceRef: z.string(),
+      inputType: z.enum(["checkbox", "radio"]).optional(),
+      checked: z.boolean().optional(),
+      name: z.string().optional(),
+      value: stringOrPath.optional(),
+    }),
+  },
+
+  FlatNav: {
+    description:
+      "Flattened navigation as a grid of BigButton-sized items. Use when MOTOR profile flattens nested hover menus.",
+    props: z.object({
+      items: z.array(
+        z.object({
+          label: z.string(),
+          sourceRef: z.string(),
+          href: z.string().optional(),
+        }),
+      ),
+    }),
+  },
+
+  StaticImageGrid: {
+    description:
+      "Static grid of images (no carousel animation). Use when VESTIBULAR profile unpacks carousels.",
+    props: z.object({
+      images: z.array(
+        z.object({
+          alt: z.string(),
+          label: z.string().optional(),
+          sourceRef: z.string().optional(),
+        }),
+      ),
+      columns: z.number().int().min(1).max(6).optional(),
+    }),
+  },
+
+  PaginatedList: {
+    description:
+      "Chunks child components with large Previous/Next buttons. Use for MOTOR profile instead of infinite scroll.",
+    props: z.object({
+      children: childrenRef,
+      pageSize: z.number().int().min(1).max(20).optional(),
+    }),
+  },
+
+  AccessibleCallout: {
+    description:
+      "Static inline callout for confirmations or uncertain-element flags. No popups or animation.",
+    props: z.object({
+      body: stringOrPath,
+      title: stringOrPath.optional(),
+      tone: z.enum(["info", "positive", "warning", "neutral", "uncertain"]).optional(),
+      sourceRef: z.string().optional(),
+    }),
+  },
 };
 
 export type Definitions = typeof definitions;

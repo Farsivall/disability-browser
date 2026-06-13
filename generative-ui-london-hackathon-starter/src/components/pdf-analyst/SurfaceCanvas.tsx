@@ -9,6 +9,7 @@ import {
 import { useAgent } from "@copilotkit/react-core/v2";
 import { catalog } from "@/a2ui/catalog";
 import { surfaceBus } from "@/a2ui/surface-bus";
+import { PerceptualSurface } from "@/a2ui/PerceptualSurface";
 
 /* The big workspace pane. A page-level A2UIProvider subscribes to the
  * surface bus so any surface produced by chat renders here at canvas size.
@@ -146,9 +147,9 @@ function CanvasInner({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="a2ui-surface p-6 md:p-8">
+      <PerceptualSurface surfaceId={surfaceId} className="p-6 md:p-8">
         <A2UIRenderer surfaceId={surfaceId} />
-      </div>
+      </PerceptualSurface>
     </div>
   );
 }

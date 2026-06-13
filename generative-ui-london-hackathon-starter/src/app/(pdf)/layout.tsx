@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Spline_Sans_Mono } from "next/font/google";
 import "@copilotkit/react-ui/v2/styles.css";
 // A2UI surface tokens, scoped to .a2ui-surface — safe, additive.
 import "@/a2ui/theme.css";
+import "@/a2ui/accessible.css";
 // pdf-analyst brand tokens + chrome, scoped to .pdf-analyst-root (this
 // segment's wrapper) so host :root tokens are never clobbered.
 import "./pdf-analyst.css";
