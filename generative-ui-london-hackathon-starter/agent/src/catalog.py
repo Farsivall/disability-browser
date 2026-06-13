@@ -97,3 +97,73 @@ component must have `id: "root"`.
    COGNITIVE → large text + cognitive spacing; MOTOR → emphasized focus; VESTIBULAR → reduceMotion true.
    Always emit this alongside components when need-profiles are active.
 """
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PERCEPTUAL WEB — accessibility component mirror (Builder A owns this).
+#
+# These are the accessibility-engineered components for the /perceptual agent.
+# Builder C owns their frontend renderers (src/a2ui/catalog/definitions.ts +
+# renderers.tsx); this is the agent-side prompt mirror so the generator knows
+# they exist and what props they take. They share the SAME catalog id, so the
+# runtime resolves them through the same renderer registry.
+#
+# IMPORTANT: kept SEPARATE from CATALOG_PROMPT above on purpose — the /fixed and
+# /dynamic agents must NOT start emitting components whose renderers don't exist
+# yet. The /perceptual generator composes CATALOG_PROMPT (the already-renderable
+# floor) with this block; enable the accessible components for emission only
+# once Builder C confirms their renderers are live (see PERCEPTUAL_USE_A11Y in
+# perceptual_agent.py).
+#
+# Every INTERACTIVE accessible component carries a `sourceRef` (the bridge key
+# from the ExtractedPage) and an `action` whose event drives proxying:
+#   "action": { "event": { "name": "proxy_event",
+#                          "context": { "sourceRef": "el-42",
+#                                       "action": "click|navigate|input|submit",
+#                                       "value"?: "..." } } }
+# The side panel turns that context into a ProxyMessage (see CONTRACTS.md).
+ACCESSIBLE_COMPONENTS_PROMPT = """\
+## Perceptual Web accessibility components
+
+Accessibility-engineered components. Prefer these over the generic catalog
+components when building an accessible surface. Visual scale, contrast, and
+focus styling come from the active theme mode — you do not set pixel sizes;
+you choose the right component and the directives + theme do the rest.
+
+### Content
+- **AccessibleHeading** { text: string, level?: "1"|"2"|"3"|"4"|"5"|"6" }
+    Semantic heading, large and high-contrast capable.
+- **ReadableText** { text: string, size?: "md"|"lg"|"xl" }
+    Body text at >=18pt with 1.5 line-height and increased letter/word spacing.
+
+### Interactive (each carries sourceRef + a proxy_event action)
+- **BigButton** { label: string, sourceRef: string, variant?: primary|secondary,
+    action: { event: { name:"proxy_event", context:{sourceRef, action:"click"} } } }
+    >=44x44px target, ample padding, thick high-contrast focus outline.
+- **BigLink** { label: string, href?: string, sourceRef: string,
+    action: { event: { name:"proxy_event", context:{sourceRef, action:"navigate"} } } }
+    Link sized as a big target; navigates via the proxy.
+- **BigInput** { label: string, sourceRef: string, inputType?: string,
+    placeholder?: string,
+    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
+    Large hit area; label always visible ABOVE the field.
+- **BigSelect** { label: string, sourceRef: string, options: [{label,value}],
+    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
+    Large select; label always visible above.
+- **BigToggle** { label: string, sourceRef: string, checked?: bool,
+    action: { event: { name:"proxy_event", context:{sourceRef, action:"input"} } } }
+    Large checkbox/switch with generous tap area.
+
+### Structure
+- **FlatNav** { items: [{label, sourceRef, href?}] }
+    A flattened list/grid of big nav buttons from a nested/hover menu. Each item
+    proxies a navigate action on click.
+- **StaticImageGrid** { images: [{alt, sourceRef?}] }
+    Unpacks a carousel into a static, non-animated grid (vestibular-safe).
+- **PaginatedList** { items: [id], pageSize?: number }
+    Chunks long content with big Next/Previous buttons instead of infinite
+    scroll.
+
+Reuse **Callout** (from the main catalog) for inline static confirmations and
+for "uncertain element — open original" flags (no popups, vestibular-safe).
+"""

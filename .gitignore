@@ -1,0 +1,13 @@
+# Secrets — NEVER commit. Holds GEMINI_API_KEY / LINKUP_API_KEY.
+.env
+.env.*
+!.env.example
+
+# Generated preview / dev artifacts
+preview.html
+lefthook.yml
+
+# Dependencies (also covered inside the template, belt-and-suspenders)
+node_modules/
+.venv/
+__pycache__/

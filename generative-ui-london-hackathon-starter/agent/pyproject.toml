@@ -9,7 +9,18 @@ dependencies = [
   "langchain==1.3.1",
   "langchain-core==1.4.0",
   "langchain-google-genai>=4.2.4",
+  "langchain-linkup>=0.2.1",
   "langgraph==1.2.1",
   "python-dotenv>=1.2.2",
   "uvicorn>=0.48.0",
 ]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# Put the agent/ dir (rootdir) on sys.path so tests can `import main` and
+# `from src import ...` exactly as the app does.
+pythonpath = ["."]
