@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ShopClutter – Wireless Noise Cancelling Headphones Pro Max Ultra</title>
+<style>
+  /* Deliberately bad: tiny text, low contrast, clutter everywhere */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 12px; color: #aaa; background: #f5f5f5; }
+
+  /* Fake cookie banner */
+  #cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #222; color: #ccc; font-size: 11px;
+    padding: 10px 20px; z-index: 999; display: flex;
+    align-items: center; gap: 12px;
+  }
+  #cookie-banner button { font-size: 10px; padding: 3px 8px; cursor: pointer; }
+
+  /* Fake newsletter popup */
+  #popup {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: white; border: 1px solid #ddd; padding: 24px;
+    width: 320px; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    font-size: 11px; color: #666;
+  }
+  #popup h3 { font-size: 13px; margin-bottom: 8px; }
+  #popup input { width: 100%; border: 1px solid #ccc; padding: 5px; font-size: 11px; margin-bottom: 6px; }
+  #popup button { font-size: 10px; padding: 4px 10px; cursor: pointer; }
+  #popup .close { position: absolute; top: 6px; right: 8px; cursor: pointer; font-size: 12px; color: #aaa; }
+
+  /* Hover nav */
+  nav { background: #333; padding: 0; }
+  nav ul { list-style: none; display: flex; }
+  nav ul li { position: relative; }
+  nav ul li a {
+    display: block; padding: 10px 14px; color: #ccc;
+    text-decoration: none; font-size: 11px; white-space: nowrap;
+  }
+  nav ul li:hover > ul { display: block; }
+  nav ul li > ul {
+    display: none; position: absolute; top: 100%; left: 0;
+    background: #444; min-width: 160px; z-index: 100;
+  }
+  nav ul li > ul li a { padding: 8px 14px; font-size: 10px; }
+
+  .layout { display: flex; gap: 12px; padding: 12px; max-width: 1100px; margin: 0 auto; }
+
+  /* Main product area */
+  .product { flex: 1; min-width: 0; }
+
+  /* SIDEBAR — junk */
+  .sidebar {
+    width: 220px; flex-shrink: 0; font-size: 10px; color: #bbb;
+    border-left: 1px solid #e0e0e0; padding-left: 10px;
+  }
+  .sidebar h4 { font-size: 10px; margin-bottom: 6px; color: #999; }
+  .sidebar .ad {
+    background: #fffbe6; border: 1px dashed #e0c060;
+    padding: 8px; margin-bottom: 8px; font-size: 9px; color: #a08000;
+  }
+
+  /* Carousel */
+  .carousel { position: relative; overflow: hidden; background: #eee; height: 220px; margin-bottom: 10px; }
+  .carousel-inner { display: flex; transition: transform 0.5s ease; }
+  .carousel-inner img { min-width: 100%; height: 220px; object-fit: cover; background: #ddd; }
+  .carousel-slide {
+    min-width: 100%; height: 220px; display: flex; align-items: center;
+    justify-content: center; font-size: 11px; color: #888; background: #e8e8e8;
+  }
+  .carousel-prev, .carousel-next {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,.3); color: white; border: none;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; z-index: 2;
+  }
+  .carousel-prev { left: 4px; }
+  .carousel-next { right: 4px; }
+
+  /* Keyword-stuffed title */
+  .product-title {
+    font-size: 11px; font-weight: bold; color: #555; line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  /* Confusing price block */
+  .price-block { margin-bottom: 8px; font-size: 11px; }
+  .price-original { text-decoration: line-through; color: #bbb; }
+  .price-deal { color: #c00; font-size: 14px; font-weight: bold; }
+  .price-coupon { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #888; margin-top: 2px; }
+  .price-coupon input { width: 12px; height: 12px; }
+
+  /* Tiny size selector */
+  .size-selector { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+  .size-btn {
+    width: 22px; height: 22px; border: 1px solid #ccc; background: white;
+    font-size: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #888;
+  }
+  .size-btn.selected { border-color: #333; background: #333; color: white; }
+  .size-label { font-size: 9px; color: #aaa; margin-bottom: 3px; }
+
+  /* Tiny colour picker */
+  .colour-picker { display: flex; gap: 4px; margin-bottom: 8px; }
+  .colour-dot {
+    width: 14px; height: 14px; border-radius: 50%; cursor: pointer;
+    border: 1px solid rgba(0,0,0,.1);
+  }
+  .colour-dot.selected { outline: 2px solid #333; outline-offset: 1px; }
+  .colour-label { font-size: 9px; color: #aaa; margin-bottom: 3px; }
+
+  /* 4 identical-looking CTAs */
+  .cta-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+  .cta-btn {
+    padding: 7px 12px; font-size: 11px; cursor: pointer;
+    border: 1px solid #bbb; background: #f0f0f0; color: #555;
+    border-radius: 2px;
+  }
+  .cta-btn.primary { background: #e8e8e8; }
+
+  /* Confirmation message (hidden until add-to-cart) */
+  #cart-confirm {
+    display: none; background: #e6f4ea; border: 1px solid #a8d5b0;
+    padding: 6px 10px; font-size: 11px; color: #2d6a3f; margin-bottom: 8px;
+    border-radius: 2px;
+  }
+
+  /* Reviews */
+  .reviews { font-size: 10px; color: #bbb; margin-bottom: 8px; }
+
+  /* Body text — grey on light grey, tiny */
+  .description { font-size: 11px; color: #b0b0b0; line-height: 1.4; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- Cookie banner -->
+<div id="cookie-banner">
+  <span>We use cookies to improve your experience. By continuing you agree to our cookie policy and terms of use.</span>
+  <button id="accept-cookies" onclick="document.getElementById('cookie-banner').remove()">Accept</button>
+  <button onclick="document.getElementById('cookie-banner').remove()">Decline</button>
+</div>
+
+<!-- Newsletter popup -->
+<div id="popup">
+  <span class="close" onclick="document.getElementById('popup').remove()">✕</span>
+  <h3>Get 10% OFF your first order!</h3>
+  <p style="margin-bottom:8px">Join 2,847,193 savvy shoppers. Unsubscribe anytime.</p>
+  <input id="popup-email" type="email" placeholder="your@email.com" />
+  <br>
+  <button onclick="document.getElementById('popup').remove()">Subscribe</button>
+  <button onclick="document.getElementById('popup').remove()" style="margin-left:6px">No thanks</button>
+</div>
+
+<!-- Hover nav -->
+<nav id="main-nav">
+  <ul>
+    <li><a id="nav-home" href="shop.html">Home</a></li>
+    <li>
+      <a href="#">Electronics ▾</a>
+      <ul>
+        <li><a id="nav-headphones" href="shop.html">Headphones</a></li>
+        <li><a id="nav-speakers" href="shop.html">Speakers</a></li>
+        <li><a id="nav-earbuds" href="shop.html">Earbuds</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Deals ▾</a>
+      <ul>
+        <li><a id="nav-flash" href="shop.html">Flash Sales</a></li>
+        <li><a id="nav-clearance" href="shop.html">Clearance</a></li>
+      </ul>
+    </li>
+    <li><a id="nav-account" href="shop.html">My Account</a></li>
+    <li><a id="nav-cart" href="shop.html">Cart (0)</a></li>
+  </ul>
+</nav>
+
+<div class="layout">
+  <!-- Main product -->
+  <div class="product">
+
+    <!-- Auto-rotating carousel -->
+    <div class="carousel" id="carousel">
+      <div class="carousel-inner" id="carousel-inner">
+        <div class="carousel-slide" style="background:#dde4f0">📦 Product Image 1 — Front view</div>
+        <div class="carousel-slide" style="background:#e0f0dd">📦 Product Image 2 — Side view</div>
+        <div class="carousel-slide" style="background:#f0e8dd">📦 Product Image 3 — In use</div>
+        <div class="carousel-slide" style="background:#f0ddee">📦 Product Image 4 — Box contents</div>
+      </div>
+      <button class="carousel-prev" id="carousel-prev" onclick="moveCarousel(-1)">‹</button>
+      <button class="carousel-next" id="carousel-next" onclick="moveCarousel(1)">›</button>
+    </div>
+
+    <!-- Keyword-stuffed title -->
+    <p class="product-title" id="product-title">
+      Wireless Noise Cancelling Headphones Pro Max Ultra Premium Bluetooth 5.3
+      Over-Ear Studio Quality Deep Bass Hi-Res Audio Certified Foldable Travel
+      Case Included 40Hr Battery Life — Black/Silver Edition (2024 Model)
+    </p>
+
+    <div class="reviews" id="reviews">★★★★☆ 4.2 (3,847 reviews) · 12,400+ sold last month</div>
+
+    <!-- Confusing price block -->
+    <div class="price-block" id="price-block">
+      <span class="price-original">£189.99</span>
+      &nbsp;
+      <span class="price-deal" id="deal-price">£94.99</span>
+      <span style="font-size:10px;color:#c00"> (50% off)</span>
+      <div class="price-coupon">
+        <input type="checkbox" id="coupon-cb" />
+        <label for="coupon-cb">Apply 10% coupon: pay <strong>£85.49</strong></label>
+      </div>
+    </div>
+
+    <!-- Size selector — tiny 22px boxes -->
+    <div class="size-label">Size / Fit:</div>
+    <div class="size-selector" id="size-selector">
+      <button class="size-btn selected" id="size-s" data-size="S" onclick="selectSize(this)">S</button>
+      <button class="size-btn" id="size-m" data-size="M" onclick="selectSize(this)">M</button>
+      <button class="size-btn" id="size-l" data-size="L" onclick="selectSize(this)">L</button>
+      <button class="size-btn" id="size-xl" data-size="XL" onclick="selectSize(this)">XL</button>
+      <button class="size-btn" id="size-xxl" data-size="XXL" onclick="selectSize(this)">XXL</button>
+    </div>
+
+    <!-- Colour picker — unlabelled dots -->
+    <div class="colour-label">Colour:</div>
+    <div class="colour-picker" id="colour-picker">
+      <div class="colour-dot selected" id="colour-black" data-colour="Black" style="background:#111" onclick="selectColour(this)" title="Black"></div>
+      <div class="colour-dot" id="colour-white" data-colour="White" style="background:#f0f0f0" onclick="selectColour(this)" title="White"></div>
+      <div class="colour-dot" id="colour-navy" data-colour="Navy" style="background:#1a237e" onclick="selectColour(this)" title="Navy"></div>
+      <div class="colour-dot" id="colour-red" data-colour="Red" style="background:#c62828" onclick="selectColour(this)" title="Red"></div>
+      <div class="colour-dot" id="colour-rose" data-colour="Rose Gold" style="background:#e8a0a0" onclick="selectColour(this)" title="Rose Gold"></div>
+    </div>
+
+    <!-- Cart confirmation -->
+    <div id="cart-confirm">✓ Added to cart!</div>
+
+    <!-- 4 identical-looking CTAs -->
+    <div class="cta-row">
+      <button class="cta-btn primary" id="add-to-cart" onclick="addToCart()">Add to Cart</button>
+      <button class="cta-btn" id="buy-now" onclick="addToCart()">Buy Now</button>
+      <button class="cta-btn" id="save-later" onclick="alert('Saved!')">Save</button>
+      <button class="cta-btn" id="compare-btn" onclick="alert('Added to compare!')">Compare</button>
+    </div>
+
+    <!-- Description — grey-on-light grey, tiny -->
+    <p class="description" id="description">
+      Experience immersive audio with our flagship Wireless Noise Cancelling
+      Headphones Pro Max Ultra. Advanced 40mm dynamic drivers deliver rich,
+      detailed sound across all genres. Active Noise Cancellation (ANC)
+      technology eliminates up to 95% of ambient noise, perfect for commuting,
+      working from home, or studio sessions. Bluetooth 5.3 with multipoint
+      connectivity lets you switch seamlessly between two devices. Premium
+      soft-touch protein leather earcups with memory foam for all-day comfort.
+      Foldable design with carry case. USB-C quick charge: 10 min = 3 hours.
+      Compatible with all leading voice assistants.
+    </p>
+
+  </div><!-- /product -->
+
+  <!-- Junk sidebar -->
+  <div class="sidebar">
+    <h4>Sponsored</h4>
+    <div class="ad">AD: Get car insurance from £18/mo! Click here →</div>
+    <div class="ad">AD: Lose 10kg in 10 days with this one weird trick</div>
+    <h4 style="margin-top:10px">Customers also viewed</h4>
+    <div style="margin-bottom:6px">
+      <a id="related-1" href="shop.html" style="font-size:10px;color:#7af">SuperBass X200 Headphones £64.99</a>
+    </div>
+    <div style="margin-bottom:6px">
+      <a id="related-2" href="shop.html" style="font-size:10px;color:#7af">BudPro True Wireless £39.99</a>
+    </div>
+    <div style="margin-bottom:6px">
+      <a id="related-3" href="shop.html" style="font-size:10px;color:#7af">SoundBar Mini Portable £79.99</a>
+    </div>
+    <h4 style="margin-top:10px">Recently viewed</h4>
+    <div style="font-size:10px;color:#bbb">You have no recently viewed items.</div>
+    <h4 style="margin-top:10px">Deal of the hour</h4>
+    <div style="font-size:10px;color:#c00;margin-top:4px">⏱ 00:47:23 remaining</div>
+    <div style="font-size:10px;margin-top:2px">
+      <a id="deal-link" href="shop.html" style="color:#7af">Lightning Cable 3-pack £4.99 →</a>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<script>
+// Carousel auto-rotation
+let carouselIdx = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+function moveCarousel(dir) {
+  carouselIdx = (carouselIdx + dir + slides.length) % slides.length;
+  document.getElementById('carousel-inner').style.transform =
+    `translateX(-${carouselIdx * 100}%)`;
+}
+setInterval(() => moveCarousel(1), 2500);
+
+// Size selection
+function selectSize(btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// Colour selection
+function selectColour(dot) {
+  document.querySelectorAll('.colour-dot').forEach(d => d.classList.remove('selected'));
+  dot.classList.add('selected');
+}
+
+// Add to cart
+function addToCart() {
+  const confirm = document.getElementById('cart-confirm');
+  confirm.style.display = 'block';
+  document.getElementById('nav-cart').textContent = 'Cart (1)';
+  setTimeout(() => { confirm.style.display = 'none'; }, 3000);
+}
+</script>
+</body>
+</html>
