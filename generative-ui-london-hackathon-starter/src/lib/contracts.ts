@@ -1,5 +1,9 @@
 /**
- * Perceptual Web — shared contracts (mirror of GenUI/shared/contracts.ts)
+ * Perceptual Web — shared TS contracts (single source of truth).
+ *
+ * Imported across the app via `@/lib/contracts`. Mirrors the agent-side Python
+ * contracts in `agent/src/contracts.py` and Builder B's
+ * `extension/src/contracts.js`. Keep those three aligned.
  */
 
 export const DUMMY_SITE_BASE_URL = "http://localhost:8080";
@@ -48,4 +52,20 @@ export interface PerceptualTheme {
   reduceMotion?: boolean;
   hideDecorations?: boolean;
   readableFont?: boolean;
+}
+
+/**
+ * Payload the side panel sends to the /perceptual agent (Builder C → A),
+ * including the accumulated refinement state. The agent reads `extractedPage`
+ * + `latestNeed` (or `need`) and the running `needHistory`/`activeProfiles`
+ * to build on prior turns.
+ */
+export interface PerceptualWebSubmitPayload {
+  need: string;
+  latestNeed: string;
+  needHistory: string[];
+  activeProfiles: string[];
+  isRefinement: boolean;
+  extractedPage: ExtractedPage;
+  perceptualTheme?: PerceptualTheme;
 }
