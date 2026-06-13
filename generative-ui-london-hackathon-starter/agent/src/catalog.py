@@ -67,6 +67,18 @@ component must have `id: "root"`.
 - **Button** { label, variant?: primary|secondary|ghost, action: { event: { name, context? } } }
 - **ChoiceChips** { label, options: [{label,value}], value: {path}, multi?: bool }
 
+### Perceptual Web accessible (REQUIRED sourceRef on all interactive — maps to ExtractedElement.sourceRef)
+- **AccessibleHeading** { text, level?: "1"-"6", sourceRef?, size?: default|large|xlarge }
+- **ReadableText** { text, sourceRef?, font?: default|readable, size?: default|large }
+- **BigButton** { label, sourceRef, variant?: primary|secondary } — proxies click
+- **BigLink** { label, sourceRef, href? } — proxies navigate
+- **BigInput** { label, sourceRef, inputType?: text|email|tel|textarea|number, placeholder?, value? }
+- **BigSelect** { label, sourceRef, options: [{label,value}], value? }
+- **BigToggle** { label, sourceRef, inputType?: checkbox|radio, checked?, name?, value? }
+- **FlatNav** { items: [{label, sourceRef, href?}] } — flattened nav grid
+- **StaticImageGrid** { images: [{alt, label?, sourceRef?}], columns?: 1-6 }
+- **PaginatedList** { children: [ids], pageSize?: 1-20 }
+- **AccessibleCallout** { body, title?, tone?: info|positive|warning|neutral|uncertain, sourceRef? }
 
 ### Rules
 1. Exactly one component has id="root". Everything else must be reachable from root.
@@ -78,4 +90,10 @@ component must have `id: "root"`.
    bindings on properties whose schema doesn't accept them.
 5. Buttons must include an `action`. Action format:
    "action": { "event": { "name": "approve_plan", "context": { ... } } }
+6. **Perceptual theme** — set via updateDataModel at `/perceptualTheme`:
+   { contrast?: default|high, textScale?: default|large|xlarge, focusStyle?: default|emphasized,
+     spacing?: default|cognitive, reduceMotion?: bool, hideDecorations?: bool, readableFont?: bool }
+   Profile hints: VISUAL → high contrast + large text + emphasized focus + hideDecorations;
+   COGNITIVE → large text + cognitive spacing; MOTOR → emphasized focus; VESTIBULAR → reduceMotion true.
+   Always emit this alongside components when need-profiles are active.
 """

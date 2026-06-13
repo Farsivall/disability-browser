@@ -1,0 +1,309 @@
+/* Perceptual Web — accessible component tokens (Seam #1 extension) */
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap");
+
+.a2ui-surface {
+  --pw-text-base: 1.125rem; /* 18px */
+  --pw-text-large: 1.375rem;
+  --pw-text-xlarge: 1.75rem;
+  --pw-line-height: 1.5;
+  --pw-letter-spacing: 0.02em;
+  --pw-word-spacing: 0.05em;
+  --pw-min-target: 44px;
+  --pw-focus-outline: 3px solid var(--accent, #bec2ff);
+  --pw-focus-offset: 2px;
+  --pw-max-column: none;
+}
+
+/* ── High contrast (VISUAL / ESSENTIALIST) ── */
+.a2ui-surface[data-pw-contrast="high"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --border: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #f0f0f0;
+  --accent: #ffeb3b;
+  --accent-foreground: #000000;
+  --pw-focus-outline: 4px solid #ffeb3b;
+
+  /* pdf-analyst renderer tokens used inside surfaces */
+  --ink: #ffffff;
+  --ink-2: #f0f0f0;
+  --surface: #000000;
+  --surface-soft: #111111;
+  --line: #ffffff;
+  --line-2: #cccccc;
+  --muted: #e0e0e0;
+  --muted-2: #cccccc;
+  --lilac: #ffffff;
+  --mint: #ffffff;
+  --orange: #ffeb3b;
+  --red: #ff6b6b;
+
+  background: #000;
+  color: #fff;
+}
+
+.a2ui-surface[data-pw-contrast="high"] [class*="color-mix"] {
+  background: var(--surface) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+/* ── Text scale (VISUAL / COGNITIVE) ── */
+.a2ui-surface[data-pw-text-scale="large"] {
+  --pw-text-base: 1.375rem;
+  --pw-text-large: 1.625rem;
+  --pw-text-xlarge: 2rem;
+  font-size: 1.125rem;
+}
+
+.a2ui-surface[data-pw-text-scale="large"] .text-\[14px\] {
+  font-size: 1.125rem !important;
+}
+
+.a2ui-surface[data-pw-text-scale="large"] .text-\[13px\],
+.a2ui-surface[data-pw-text-scale="large"] .text-\[13\.5px\] {
+  font-size: 1.0625rem !important;
+}
+
+.a2ui-surface[data-pw-text-scale="xlarge"] {
+  --pw-text-base: 1.625rem;
+  --pw-text-large: 2rem;
+  --pw-text-xlarge: 2.5rem;
+  font-size: 1.375rem;
+}
+
+.a2ui-surface[data-pw-text-scale="xlarge"] .text-\[14px\],
+.a2ui-surface[data-pw-text-scale="xlarge"] .text-\[13px\],
+.a2ui-surface[data-pw-text-scale="xlarge"] .text-\[13\.5px\],
+.a2ui-surface[data-pw-text-scale="xlarge"] .text-\[20px\],
+.a2ui-surface[data-pw-text-scale="xlarge"] .text-\[30px\] {
+  font-size: 1.375rem !important;
+  line-height: 1.4 !important;
+}
+
+/* ── Cognitive spacing (COGNITIVE / READING) ── */
+.a2ui-surface[data-pw-spacing="cognitive"] {
+  --pw-line-height: 1.75;
+  --pw-letter-spacing: 0.04em;
+  --pw-word-spacing: 0.12em;
+  --pw-max-column: 42rem;
+  max-width: var(--pw-max-column);
+  margin-inline: auto;
+}
+
+.a2ui-surface[data-pw-spacing="cognitive"] p,
+.a2ui-surface[data-pw-spacing="cognitive"] .pw-readable {
+  line-height: var(--pw-line-height);
+  letter-spacing: var(--pw-letter-spacing);
+  word-spacing: var(--pw-word-spacing);
+}
+
+/* ── Focus outline (VISUAL / MOTOR) ── */
+.a2ui-surface[data-pw-focus="emphasized"] {
+  --pw-focus-outline: 4px solid #ffeb3b;
+  --pw-focus-offset: 3px;
+}
+
+.a2ui-surface[data-pw-focus="emphasized"] .pw-focusable:focus-visible,
+.a2ui-surface[data-pw-focus="emphasized"] button:focus-visible,
+.a2ui-surface[data-pw-focus="emphasized"] a:focus-visible,
+.a2ui-surface[data-pw-focus="emphasized"] input:focus-visible,
+.a2ui-surface[data-pw-focus="emphasized"] select:focus-visible,
+.a2ui-surface[data-pw-focus="emphasized"] textarea:focus-visible {
+  outline: var(--pw-focus-outline);
+  outline-offset: var(--pw-focus-offset);
+}
+
+/* ── Readable font opt-in ── */
+.a2ui-surface[data-pw-readable-font="true"] {
+  font-family: "Atkinson Hyperlegible", Verdana, sans-serif !important;
+}
+
+.a2ui-surface[data-pw-readable-font="true"] .pw-readable,
+.a2ui-surface[data-pw-readable-font="true"] .pw-readable--readable-font {
+  font-family: "Atkinson Hyperlegible", Verdana, sans-serif;
+}
+
+/* ── Vestibular — no motion ── */
+.a2ui-surface[data-pw-motion="reduced"],
+.a2ui-surface[data-pw-motion="reduced"] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ── Hide decorative imagery ── */
+.a2ui-surface[data-pw-hide-decor="true"] img,
+.a2ui-surface[data-pw-hide-decor="true"] .pw-image-grid {
+  display: none !important;
+}
+
+.pw-focusable:focus-visible {
+  outline: var(--pw-focus-outline);
+  outline-offset: var(--pw-focus-offset);
+}
+
+.pw-heading {
+  color: var(--foreground);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pw-heading--1 { font-size: var(--pw-text-xlarge); }
+.pw-heading--2 { font-size: var(--pw-text-large); }
+.pw-heading--3 { font-size: var(--pw-text-base); }
+.pw-heading--4,
+.pw-heading--5,
+.pw-heading--6 { font-size: var(--pw-text-base); }
+
+.pw-readable {
+  font-size: var(--pw-text-base);
+  line-height: var(--pw-line-height);
+  letter-spacing: var(--pw-letter-spacing);
+  word-spacing: var(--pw-word-spacing);
+  color: var(--foreground);
+}
+
+.pw-readable--readable-font {
+  font-family: "Atkinson Hyperlegible", Verdana, sans-serif;
+}
+
+.pw-big-target {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pw-min-target);
+  min-height: var(--pw-min-target);
+  padding: 0.75rem 1.25rem;
+  font-size: var(--pw-text-base);
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  border: 2px solid var(--border);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.pw-big-target--secondary {
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.pw-big-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pw-min-target);
+  min-height: var(--pw-min-target);
+  padding: 0.75rem 1.25rem;
+  font-size: var(--pw-text-base);
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: underline;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.pw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.pw-field-label {
+  font-size: var(--pw-text-base);
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.pw-field-input,
+.pw-field-select {
+  min-height: var(--pw-min-target);
+  padding: 0.625rem 0.875rem;
+  font-size: var(--pw-text-base);
+  border: 2px solid var(--border);
+  border-radius: calc(var(--radius) - 4px);
+  background: var(--card);
+  color: var(--foreground);
+  width: 100%;
+}
+
+.pw-field-textarea {
+  min-height: calc(var(--pw-min-target) * 2);
+  resize: vertical;
+}
+
+.pw-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: var(--pw-min-target);
+  font-size: var(--pw-text-base);
+  cursor: pointer;
+}
+
+.pw-toggle-input {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  accent-color: var(--primary);
+}
+
+.pw-flat-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.pw-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.pw-image-grid-item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border);
+  border-radius: calc(var(--radius) - 4px);
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.pw-paginated {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pw-paginated-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pw-paginated-status {
+  font-size: var(--pw-text-base);
+  color: var(--muted-foreground);
+  flex: 1;
+}
+
+.pw-callout-uncertain {
+  border-style: dashed;
+  border-width: 2px;
+}

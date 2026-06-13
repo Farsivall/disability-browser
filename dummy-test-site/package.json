@@ -1,0 +1,9 @@
+{
+  "name": "perceptual-web-dummy-test-site",
+  "private": true,
+  "description": "Deliberately inaccessible test pages for Perceptual Web hackathon",
+  "scripts": {
+    "start": "npx --yes serve . -p 8080 --no-clipboard",
+    "dev": "npm run start"
+  }
+}
