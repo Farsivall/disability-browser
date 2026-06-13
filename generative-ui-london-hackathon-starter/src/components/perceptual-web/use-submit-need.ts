@@ -11,12 +11,6 @@ import { buildDemoSurfaceForProfiles } from "@/components/perceptual-web/demo-su
 import { useRefinementSession } from "@/a2ui/refinement-session";
 import { usePerceptualTheme } from "@/a2ui/use-perceptual-theme";
 
-// Upper bound only — exists solely to detect a genuinely hung/offline agent and
-// fall back gracefully, NOT to cap normal generation. Real generation
-// (map_need + Linkup enrichment + the generation LLM call on a large page) must
-// always win, so keep this generous.
-const AGENT_SURFACE_TIMEOUT_MS = 90_000;
-
 export type SubmitNeedOptions = {
   /** Skip agent and always apply offline demo layouts (TEST C6) */
   forceDemo?: boolean;
@@ -125,30 +119,35 @@ export function useSubmitNeed() {
           content: updatedSession.needs.join(". "),
         });
 
+        // No timeout — wait for the agent to actually finish. A hard cap mid-
+        // generation was tripping the demo fallback on large pages. We only
+        // fall back if the agent genuinely errors or produces no surface.
+        let runFailed = false;
         try {
-          await Promise.race([
-            agent.runAgent({
-              forwardedProps: {
-                perceptualWeb: {
-                  need: updatedSession.needs.join(". "),
-                  latestNeed: trimmed,
-                  needHistory: updatedSession.needs,
-                  activeProfiles: updatedSession.profiles,
-                  isRefinement,
-                  extractedPage,
-                  perceptualTheme: updatedSession.theme,
-                },
+          await agent.runAgent({
+            forwardedProps: {
+              perceptualWeb: {
+                need: updatedSession.needs.join(". "),
+                latestNeed: trimmed,
+                needHistory: updatedSession.needs,
+                activeProfiles: updatedSession.profiles,
+                isRefinement,
+                extractedPage,
+                perceptualTheme: updatedSession.theme,
               },
-            }),
-            new Promise<never>((_, reject) => {
-              window.setTimeout(
-                () => reject(new Error("agent surface timeout")),
-                AGENT_SURFACE_TIMEOUT_MS,
-              );
-            }),
-          ]);
+            },
+          });
         } catch (err) {
+          runFailed = true;
           console.warn("[PerceptualWeb] agent.runAgent failed", err);
+        }
+
+        // Grace settle: ops arrive via the activity stream and may land a beat
+        // after runAgent resolves. Poll briefly so we don't false-negative.
+        if (!runFailed && surfaceOpCount() <= opsBefore) {
+          for (let i = 0; i < 12 && surfaceOpCount() <= opsBefore; i++) {
+            await new Promise((r) => window.setTimeout(r, 250));
+          }
         }
 
         if (surfaceOpCount() <= opsBefore) {
